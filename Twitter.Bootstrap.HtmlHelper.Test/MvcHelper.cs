@@ -16,7 +16,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		{
 			HttpContextBase httpcontext = GetHttpContext("/app/", null, null);
 			RouteCollection rt = new RouteCollection();
-			rt.Add(new Route("{controller}/{action}/{id}", null) { Defaults = new RouteValueDictionary(new { id = "defaultid" }) });
+			rt.Add("Default", new Route("{controller}/{action}/{id}", null) { Defaults = new RouteValueDictionary(new { id = "defaultid" }) });
+			//rt.Add(new Route("{controller}/{action}/{id}", null) { Defaults = new RouteValueDictionary(new { id = "defaultid" }) });
 			rt.Add("namedroute", new Route("named/{controller}/{action}/{id}", null) { Defaults = new RouteValueDictionary(new { id = "defaultid" }) });
 			RouteData rd = new RouteData();
 			rd.Values.Add("controller", "home");
