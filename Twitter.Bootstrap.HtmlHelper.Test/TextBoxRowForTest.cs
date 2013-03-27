@@ -31,7 +31,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void TextBoxRowFor_should_generate_div_class_control_group()
 		{
 			// Act			
-			var html = helper.TextBoxRowFor(t => t.Name, null).ToHtmlString();
+			var html = helper.TextBoxRowFor(t => t.Name).ToHtmlString();
 
 			// Assert
 			Assert.Contains(@"<div class=""control-group"">", html);
@@ -47,10 +47,9 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 				{
 					Gender = new Gender() { Text ="Male" }
 				};
-			//HtmlHelper<Employee> html = CreateHtmlHelper<Employee>(emp);
-
+	
 			// Act			
-			var html = helper.TextBoxRowFor(t => t.Gender.Text, null).ToHtmlString();
+			var html = helper.TextBoxRowFor(t => t.Gender.Text).ToHtmlString();
 
 			// Assert
 			Assert.Contains(@"<input id=""Gender_Text"" name=""Gender.Text"" type=""text"" value=""Male"" />", html);
@@ -100,6 +99,28 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 
 			// assert
 			Assert.Contains("<span class=\"help-block\">This is first name.</span>", html.ToHtmlString());
+		}
+
+		[Fact]
+		public void TextBoxRowFor_should_be_able_to_generate_icon_prepend()
+		{
+			// act
+			var html = helper.TextBoxRowFor(t => t.Firstname, new { @prepend = "icon-envelope" }).ToHtmlString();
+
+			// assert
+			Assert.Contains("<div class=\"input-prepend\">", html);
+			Assert.Contains("<span class=\"add-on\"><i class=\"icon-envelope\"></i></span>", html);
+		}
+
+		[Fact]
+		public void TextBoxRowFor_should_be_able_to_gnerate_with_icon_append()
+		{
+			// act
+			var html = helper.TextBoxRowFor(t => t.Firstname, new { @append = "icon-envelope" }).ToHtmlString();
+
+			// assert
+			Assert.Contains("<div class=\"input-append\">", html);
+			Assert.Contains("<span class=\"add-on\"><i class=\"icon-envelope\"></i></span>", html);
 		}
 	}
 }

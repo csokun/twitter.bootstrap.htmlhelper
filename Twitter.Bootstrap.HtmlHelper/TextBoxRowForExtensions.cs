@@ -45,12 +45,30 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.AddCssClass("controls");
 			
 			// actual controls
-			var input = html.TextBoxFor(expression, attributes);
-			ctrl.InnerHtml = input.ToHtmlString();
+			var hasIconAttached = attributes.ContainsKey("prepend") || attributes.ContainsKey("append");
+
+			var wrap = new TagBuilder("div");
+
+			if (attributes.ContainsKey("prepend"))
+			{
+				wrap.AddCssClass("input-prepend");
+				wrap.InnerHtml = string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["prepend"]));
+			} 
+			
+			wrap.InnerHtml += html.TextBoxFor(expression, attributes);
+
+			if (attributes.ContainsKey("append"))
+			{
+				wrap.AddCssClass("input-append");
+				wrap.InnerHtml += string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["append"]));
+			}
+
 			if (attributes.ContainsKey("hints"))
 			{
-				ctrl.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
+				wrap.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
 			}
+
+			ctrl.InnerHtml = hasIconAttached ? wrap.ToString() : wrap.InnerHtml;
 
 			// validation if required
 			if (includeValidation)
