@@ -18,20 +18,22 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 		public static IHtmlString TextBoxRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                           Expression<Func<TModel, TProperty>> expression,
-		                                                           IDictionary<string, object> htmlAttributes)
+		                                                           object htmlAttributes)
 		{
 			return TextBoxRowFor(html, expression, false, htmlAttributes);
 		}
 
 		public static IHtmlString TextBoxRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 			Expression<Func<TModel, TProperty>> expression, 
-			bool includeValidation, IDictionary<string, object> htmlAttributes)
+			bool includeValidation, object htmlAttributes)
 		{
 			if (expression == null)
 			{
 				throw new ArgumentNullException("expression");
 			}
 
+			var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("control-group");
 
@@ -43,8 +45,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.AddCssClass("controls");
 			
 			// actual controls
-			var input = html.TextBoxFor(expression, htmlAttributes);
+			var input = html.TextBoxFor(expression, attributes);
 			ctrl.InnerHtml = input.ToHtmlString();
+			if (attributes.ContainsKey("hints"))
+			{
+				ctrl.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
+			}
+
 			// validation if required
 			if (includeValidation)
 			{

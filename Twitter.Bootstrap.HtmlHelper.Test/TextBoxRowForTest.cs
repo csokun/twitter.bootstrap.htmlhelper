@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Twitter.Bootstrap.HtmlHelpers.Test.Models;
 using Xunit;
 
@@ -89,6 +90,16 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 
 			// Assert
 			Assert.Contains(@"<label class=""control-label"" for=""Firstname"">First Name</label>", html);
+		}
+
+		[Fact]
+		public void TextBoxRowFor_should_be_able_to_generate_hint()
+		{
+			// act
+			var html = helper.TextBoxRowFor(t => t.Firstname, new { @hints = "This is first name."});
+
+			// assert
+			Assert.Contains("<span class=\"help-block\">This is first name.</span>", html.ToHtmlString());
 		}
 	}
 }

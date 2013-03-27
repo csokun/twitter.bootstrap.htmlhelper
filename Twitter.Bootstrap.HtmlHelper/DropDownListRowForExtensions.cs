@@ -24,17 +24,25 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return DropDownListRowFor(html, expression, selectList, includeValidation, null);
 		}
 
+		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
+		                                                                Expression<Func<TModel, TProperty>> expression,
+		                                                                IEnumerable<SelectListItem> selectList,
+		                                                                object htmlAttributes)
+		{
+			return DropDownListRowFor(html, expression, selectList, false, htmlAttributes);
+		}
+
 		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
 			Expression<Func<TModel, TProperty>> expression,
 			IEnumerable<SelectListItem> selectList, 
 			bool includeValidation,
-			IDictionary<string, object> htmlAttributes)
+			object htmlAttributes)
 		{
 			if (expression == null)
 			{
 				throw new ArgumentNullException("expression");
 			}
-
+			var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("control-group");
 
@@ -46,8 +54,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.AddCssClass("controls");
 
 			// actual controls
-			var input = html.DropDownListFor(expression, selectList, htmlAttributes);
+			var input = html.DropDownListFor(expression, selectList, attributes);
 			ctrl.InnerHtml = input.ToHtmlString();
+			if (attributes.ContainsKey("hints"))
+			{
+				ctrl.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
+			}
 			// validation if required
 			if (includeValidation)
 			{
