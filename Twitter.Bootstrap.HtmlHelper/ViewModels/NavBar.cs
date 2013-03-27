@@ -14,7 +14,6 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 		public NavBar()
 		{
 			Fixed = NavBarDock.None;
-			Items = new List<TbMenuItem>();
 		}
 
 		public string Brand { get; set; }
@@ -28,6 +27,6 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 		// .navbar-fixed-top
 		public NavBarDock Fixed { get; set; }
 
-		public IList<TbMenuItem> Items { get; set; }
+		public IList<TbMenuTree> Items { get; set; }
 	}
 }

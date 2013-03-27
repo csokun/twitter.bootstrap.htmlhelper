@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BreadcrumbsExtensions.cs" />
     <Compile Include="DropDownListRowForExtensions.cs" />
     <Compile Include="DropdownsExtensions.cs" />
     <Compile Include="ViewModels\NavBar.cs" />

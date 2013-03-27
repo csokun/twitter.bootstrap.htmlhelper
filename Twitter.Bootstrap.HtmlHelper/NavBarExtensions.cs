@@ -81,11 +81,11 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return MvcHtmlString.Create(placeholder.ToString(TagRenderMode.Normal));
 		}
 
-		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IList<TbMenuItem> items)
+		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IList<TbMenuTree> tree)
 		{
-			if(items == null) return;
+			if(tree == null) return;
 
-			foreach (var menuItem in items)
+			foreach (var menuItem in tree)
 			{
 				if (menuItem == null)
 				{
@@ -94,7 +94,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 					continue;
 				}
 
-				if (menuItem.Items == null || menuItem.Items.Count == 0)
+				if (menuItem.Leaf)
 				{
 					htmlStringBuilder.Append( menuItem.Selected ? "<li class=\"active\">" : "<li>" );
 					

@@ -34,7 +34,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
-			Assert.Contains("<div class=\"navbar-inverse navbar\">", html);
+			Assert.Contains("<div class=\"navbar navbar-inverse\">", html);
 			Assert.Contains("<div class=\"navbar-inner\">", html);
 			Assert.Contains(string.Format("<a class=\"brand\" href=\"#\">{0}</a>", navBar.Brand), html);
 			Assert.Contains(collapsible, html);
@@ -46,11 +46,11 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// arrange
 			var navBar = new NavBar()
 				{
-					Items = new List<TbMenuItem>()
+					Items = new List<TbMenuTree>()
 						{
-							new TbMenuItem() {Text = "Home"},
+							new TbMenuTree() { Text =  "Home" },
 							null,
-							new TbMenuItem() {Text = "About", Action = "About", Controller = "Home", Selected = true}
+							new TbMenuTree() { Text = "About", Selected = true }
 						}
 				};
 
@@ -69,16 +69,16 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// arrange
 			var navBar = new NavBar()
 			{
-				Items = new List<TbMenuItem>()
+				Items = new List<TbMenuTree>()
 						{
-							new TbMenuItem() {Text = "Home"},
+							new TbMenuTree() {Text = "Home"},
 							null,
-							new TbMenuItem()
+							new TbMenuTree()
 								{
 									Text = "About", 
 									Action = "About", 
 									Selected = true,
-									Items = new List<TbMenuItem>()
+									Items = new List<TbMenuTree>()
 								}
 						}
 			};
@@ -96,20 +96,20 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// arrange
 			var navBar = new NavBar()
 			{
-				Items = new List<TbMenuItem>()
+				Items = new List<TbMenuTree>()
 						{
-							new TbMenuItem() {Text = "Home"},
+							new TbMenuTree() {Text = "Home"},
 							null,
-							new TbMenuItem()
+							new TbMenuTree()
 								{
 									Text = "About", 
 									Action = "About", 
 									Selected = true,
-									Items = new List<TbMenuItem>()
+									Items = new List<TbMenuTree>()
 										{
-											new TbMenuItem() { Text = "About 1" },
-											new TbMenuItem() { Text = "About 2" },
-											new TbMenuItem() { Text = "About 3" }
+											new TbMenuTree() { Text = "About 1" },
+											new TbMenuTree() { Text = "About 2" },
+											new TbMenuTree() { Text = "About 3" }
 										}
 								}
 						}

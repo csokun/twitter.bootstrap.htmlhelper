@@ -2,6 +2,23 @@
 
 namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 {
+	public class TbMenuTree: TbMenuItem
+	{
+		public bool Node
+		{
+			get { return Items != null && Items.Count > 0; }
+		}
+
+		public bool Leaf
+		{
+			get { return Items == null || Items.Count == 0; }
+		}
+		
+		//public TbMenuItem Parent { get; set; }
+
+		public List<TbMenuTree> Items { get; set; }
+	}
+
 	public class TbMenuItem
 	{
 		private string _route;
@@ -32,6 +49,5 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 
 		public bool Selected { get; set; }
 
-		public List<TbMenuItem> Items { get; set; }
 	}
 }
