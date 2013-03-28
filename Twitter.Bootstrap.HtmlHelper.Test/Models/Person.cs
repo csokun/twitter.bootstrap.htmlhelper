@@ -17,6 +17,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test.Models
 
 		public int OccupationId { get; set; }
 
+		public string Password { get; set; }
+
 		public IList<Occupation> Occupations { get; set; }
 	}
 }

@@ -56,7 +56,9 @@
     <Compile Include="Models\Occupation.cs" />
     <Compile Include="MvcHelper.cs" />
     <Compile Include="NavBarTest.cs" />
+    <Compile Include="PasswordRowForExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TbCheckboxExtensionsTest.cs" />
     <Compile Include="TextBoxRowForTest.cs" />
   </ItemGroup>
   <ItemGroup>
