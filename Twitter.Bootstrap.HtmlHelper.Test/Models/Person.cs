@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Twitter.Bootstrap.HtmlHelpers.Test.Models
@@ -10,6 +11,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test.Models
 
 		[Display(Name = "First Name")]
 		public string Firstname { get; set; }
+
+		public DateTime Birthdate { get; set; }
 
 		public string Name { get; set; }
 

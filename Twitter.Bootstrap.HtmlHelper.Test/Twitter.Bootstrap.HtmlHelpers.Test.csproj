@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BreadcrumbsTest.cs" />
+    <Compile Include="DatepickerForExtensionsTest.cs" />
     <Compile Include="DropDownListHelperTest.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Gender.cs" />
