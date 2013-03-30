@@ -53,7 +53,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// id
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
-			wrap.GenerateId(fullName);
+			wrap.GenerateId(fullName + "_datepicker");
 
 			// data-date-format
 			var dateFormat = attributes.ContainsKey("data-date-format")
@@ -74,7 +74,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 													? html.AttributeEncode(attributes["data-date"])
 													: value);
 
-			wrap.InnerHtml += string.Format(@"<input type=""text"" size=""16"" readonly value=""{0}"" class=""span2"" />", value);
+			wrap.InnerHtml += html.TextBox(fullName, value, new {@class="span2", @size=16, @readonly="readonly"});
 			wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
 
 			if (attributes.ContainsKey("hints"))
