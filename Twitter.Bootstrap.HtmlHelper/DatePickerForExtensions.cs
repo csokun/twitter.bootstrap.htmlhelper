@@ -58,7 +58,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// data-date-format
 			var dateFormat = attributes.ContainsKey("data-date-format")
 				                 ? html.AttributeEncode(attributes["data-date-format"])
-				                 : "dd-mm-yyyy";
+				                 : "dd/mm/yyyy";
 			wrap.Attributes.Add("data-date-format", dateFormat);
 
 			// data-date
@@ -75,6 +75,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 													: value);
 
 			wrap.InnerHtml += html.TextBox(fullName, value, new {@class="span2", @size=16, @readonly="readonly"});
+			//wrap.InnerHtml += string.Format(@"<input type=""text"" class=""span2"" id=""{0}"" name=""{1}"" value=""{2}"" readonly size=16 />", fullName,
+			//																fullName, value);
 			wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
 
 			if (attributes.ContainsKey("hints"))
