@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
@@ -76,7 +75,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 													: value);
 
 			wrap.InnerHtml += string.Format(@"<input type=""text"" size=""16"" readonly value=""{0}"" class=""span2"" />", value);
-			wrap.InnerHtml += string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["append"]));
+			wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
 
 			if (attributes.ContainsKey("hints"))
 			{
