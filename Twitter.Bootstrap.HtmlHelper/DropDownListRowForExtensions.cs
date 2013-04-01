@@ -46,11 +46,11 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 
 			// validation if required
-			var validation = string.Format("{0}", html.ValidationMessageFor(expression));
+			var validation = string.Format("{0}", html.ValidationMessageFor(expression, null, new { @class = "help-inline" }));
 			if (!string.IsNullOrWhiteSpace(validation))
 			{
-				ctrl.InnerHtml += validation.Replace(@"class=""""", @"class=""help-inline""");
-				controlGroup.AddCssClass("error");
+				ctrl.InnerHtml += validation;
+				//controlGroup.AddCssClass("error");
 			}
 
 			controlGroup.InnerHtml = lbl + ctrl;
