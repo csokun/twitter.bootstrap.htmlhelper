@@ -13,29 +13,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		                                                                Expression<Func<TModel, TProperty>> expression,
 		                                                                IEnumerable<SelectListItem> selectList)
 		{
-			return DropDownListRowFor(html, expression, selectList, false, null);
+			return DropDownListRowFor(html, expression, selectList, null);
 		}
 
-		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                                Expression<Func<TModel, TProperty>> expression,
-		                                                                IEnumerable<SelectListItem> selectList,
-		                                                                bool includeValidation)
-		{
-			return DropDownListRowFor(html, expression, selectList, includeValidation, null);
-		}
-
-		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                                Expression<Func<TModel, TProperty>> expression,
-		                                                                IEnumerable<SelectListItem> selectList,
-		                                                                object htmlAttributes)
-		{
-			return DropDownListRowFor(html, expression, selectList, false, htmlAttributes);
-		}
 
 		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
 			Expression<Func<TModel, TProperty>> expression,
 			IEnumerable<SelectListItem> selectList, 
-			bool includeValidation,
 			object htmlAttributes)
 		{
 			if (expression == null)
@@ -60,10 +44,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			{
 				ctrl.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
 			}
+
 			// validation if required
-			if (includeValidation)
+			var validation = string.Format("{0}", html.ValidationMessageFor(expression));
+			if (!string.IsNullOrWhiteSpace(validation))
 			{
-				ctrl.InnerHtml += html.ValidationMessageFor(expression).ToHtmlString();
+				ctrl.InnerHtml += validation.Replace(@"class=""""", @"class=""help-inline""");
+				controlGroup.AddCssClass("error");
 			}
 
 			controlGroup.InnerHtml = lbl + ctrl;

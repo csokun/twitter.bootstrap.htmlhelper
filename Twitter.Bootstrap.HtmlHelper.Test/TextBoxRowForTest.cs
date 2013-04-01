@@ -71,7 +71,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		{
 			// arrange
 			var expected =
-				@"<div class=""control-group""><label class=""control-label"" for=""Id"">Id</label><div class=""controls""><input data-val=""true"" data-val-number=""The field Id must be a number."" data-val-required=""The Id field is required."" id=""Id"" name=""Id"" type=""text"" value=""0"" /><span class=""field-validation-valid"" data-valmsg-for=""Id"" data-valmsg-replace=""true""></span></div></div>";
+				@"<div class=""error control-group""><label class=""control-label"" for=""Id"">Id</label><div class=""controls""><input data-val=""true"" data-val-number=""The field Id must be a number."" data-val-required=""The Id field is required."" id=""Id"" name=""Id"" type=""text"" value=""0"" /><span class=""field-validation-valid"" data-valmsg-for=""Id"" data-valmsg-replace=""true""></span></div></div>";
 			
 			helper.ViewContext.ClientValidationEnabled = true;
 			helper.ViewContext.UnobtrusiveJavaScriptEnabled = true;

@@ -80,7 +80,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.InnerHtml = wrap.ToString();
 
 			// validation if required
-			ctrl.InnerHtml += html.ValidationMessageFor(expression).ToHtmlString();
+			var validation = string.Format("{0}", html.ValidationMessageFor(expression));
+			if (!string.IsNullOrWhiteSpace(validation))
+			{
+				ctrl.InnerHtml += validation.Replace(@"class=""""", @"class=""help-inline""");
+				controlGroup.AddCssClass("error");
+			}
 
 			controlGroup.InnerHtml = lbl + ctrl;
 

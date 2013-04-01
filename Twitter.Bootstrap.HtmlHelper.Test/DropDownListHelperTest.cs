@@ -41,7 +41,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void DropDownListRowFor_should_generate_inside_control_group()
 		{
 			// act
-			var html = _helper.DropDownListRowFor(t => t.OccupationId, _selectList, false, null).ToHtmlString();
+			var html = _helper.DropDownListRowFor(t => t.OccupationId, _selectList, null).ToHtmlString();
 
 			// assert
 			Assert.Contains(@"<option selected=""selected"" value=""1"">Teacher</option>", html);
@@ -54,7 +54,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			_helper.ViewContext.UnobtrusiveJavaScriptEnabled = true;
 
 			// act
-			var html = _helper.DropDownListRowFor(t => t.OccupationId, _selectList, true, null).ToHtmlString();
+			var html = _helper.DropDownListRowFor(t => t.OccupationId, _selectList,null).ToHtmlString();
 
 			// assert
 			Assert.Contains(@"field-validation-valid", html);
