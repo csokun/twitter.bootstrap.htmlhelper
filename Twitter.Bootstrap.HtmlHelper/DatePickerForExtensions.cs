@@ -58,7 +58,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// data-date-format
 			var dateFormat = attributes.ContainsKey("data-date-format")
 				                 ? html.AttributeEncode(attributes["data-date-format"])
-				                 : "dd/mm/yyyy";
+				                 : "yyyy-mm-dd";
 			wrap.Attributes.Add("data-date-format", dateFormat);
 
 			// data-date

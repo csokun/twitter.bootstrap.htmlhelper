@@ -45,7 +45,9 @@
     <Compile Include="DropDownListRowForExtensions.cs" />
     <Compile Include="DropdownsExtensions.cs" />
     <Compile Include="PasswordRowForExtensions.cs" />
-    <Compile Include="TbCheckboxForExtensions.cs" />
+    <Compile Include="TbCheckboxExtensions.cs" />
+    <Compile Include="TbPagingExtensions.cs" />
+    <Compile Include="ViewModels\CheckBoxItem.cs" />
     <Compile Include="ViewModels\NavBar.cs" />
     <Compile Include="NavBarExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

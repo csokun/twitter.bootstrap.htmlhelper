@@ -1,0 +1,7 @@
+﻿@using Twitter.Bootstrap.HtmlHelpers;
+@model MvcTwitterB.Models.FavoriteArtistModel
+@using (Html.BeginForm())
+{
+	@Html.TbCheckboxListRowFor(m => m.Favorites, false)
+	<button type="submit" class="btn btn-primary">Submit</button>
+}

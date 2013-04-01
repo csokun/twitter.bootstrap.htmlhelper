@@ -33,7 +33,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void Should_generate_proper_dom()
 		{
 			// arrange
-			const string expect = @"<div class=""input-append date"" data-date=""30-03-2013"" data-date-format=""dd-mm-yyyy"" id=""Birthdate_datepicker""><input class=""span2"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""30-03-2013"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div></div>";
+			const string expect = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""span2"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div></div>";
 
 			// act
 			var html = helper.DatepickerRowFor(p => p.Birthdate).ToHtmlString();

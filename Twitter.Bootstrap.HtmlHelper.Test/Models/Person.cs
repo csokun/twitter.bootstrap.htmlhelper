@@ -22,6 +22,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test.Models
 
 		public string Password { get; set; }
 
+		public bool IsActive { get; set; }
+
 		public IList<Occupation> Occupations { get; set; }
 	}
 }

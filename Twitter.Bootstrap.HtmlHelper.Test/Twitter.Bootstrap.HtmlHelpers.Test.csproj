@@ -52,6 +52,7 @@
     <Compile Include="BreadcrumbsTest.cs" />
     <Compile Include="DatepickerForExtensionsTest.cs" />
     <Compile Include="DropDownListHelperTest.cs" />
+    <Compile Include="Models\MyOccupation.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Occupation.cs" />
@@ -59,7 +60,8 @@
     <Compile Include="NavBarTest.cs" />
     <Compile Include="PasswordRowForExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TbCheckboxExtensionsTest.cs" />
+    <Compile Include="TbCheckboxForExtensionsTest.cs" />
+    <Compile Include="TbCheckboxListForTest.cs" />
     <Compile Include="TextBoxRowForTest.cs" />
   </ItemGroup>
   <ItemGroup>

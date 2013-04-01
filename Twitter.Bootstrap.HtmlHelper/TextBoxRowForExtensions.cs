@@ -73,7 +73,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// validation if required
 			if (includeValidation)
 			{
-				ctrl.InnerHtml += html.ValidationMessageFor(expression).ToHtmlString();
+				ctrl.InnerHtml += html.ValidationMessageFor(expression);
 			}
 
 			controlGroup.InnerHtml = lbl + ctrl;
