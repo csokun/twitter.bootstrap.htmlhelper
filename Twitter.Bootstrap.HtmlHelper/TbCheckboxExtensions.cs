@@ -60,8 +60,16 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
-			var dom = new StringBuilder();
 			
+			var dom = new StringBuilder();
+			dom.Append(@"<div class=""control-group"">");
+			
+			// label
+			string labelText = metadata.DisplayName ?? metadata.PropertyName;
+			dom.AppendFormat(@"<label class=""control-label"">{0}</label>", html.Encode(labelText));
+
+			// controls
+			dom.Append(@"<div class=""controls"">");
 			var i = 0;
 			foreach (var item in selectList)
 			{
@@ -81,7 +89,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 				i++;
 			}
-
+			dom.Append("</div>");
+			dom.Append("</div>");
 			return MvcHtmlString.Create(dom.ToString());
 		}
 	}
