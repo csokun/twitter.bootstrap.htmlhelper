@@ -44,6 +44,8 @@
     <Compile Include="DatePickerForExtensions.cs" />
     <Compile Include="DropDownListRowForExtensions.cs" />
     <Compile Include="DropdownsExtensions.cs" />
+    <Compile Include="EmailRowForExtensions.cs" />
+    <Compile Include="NumberRowForExtensions.cs" />
     <Compile Include="PasswordRowForExtensions.cs" />
     <Compile Include="TbCheckboxExtensions.cs" />
     <Compile Include="TbPagingExtensions.cs" />

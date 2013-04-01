@@ -5,19 +5,19 @@ using System.Web.Mvc;
 
 namespace Twitter.Bootstrap.HtmlHelpers
 {
-	public static class PasswordRowForExtensions
+	public static class NumberRowForExtensions
 	{
-		public static IHtmlString PasswordRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
+		public static IHtmlString NumberRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 																															 Expression<Func<TModel, TProperty>> expression)
 		{
-			return PasswordRowFor(html, expression, null);
+			return NumberRowFor(html, expression, null);
 		}
 
-		public static IHtmlString PasswordRowFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
+		public static IHtmlString NumberRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 			Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
 		{
 			var content = html.TextBoxRowFor(expression, htmlAttributes).ToHtmlString();
-			content = content.Replace("type=\"text\"", "type=\"password\"");
+			content = content.Replace("type=\"text\"", "type=\"number\"");
 
 			return MvcHtmlString.Create(content);
 		}

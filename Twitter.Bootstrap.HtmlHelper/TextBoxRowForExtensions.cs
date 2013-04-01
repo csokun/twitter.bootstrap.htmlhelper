@@ -17,15 +17,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		}
 
 		public static IHtmlString TextBoxRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                           Expression<Func<TModel, TProperty>> expression,
-		                                                           object htmlAttributes)
-		{
-			return TextBoxRowFor(html, expression, false, htmlAttributes);
-		}
-
-		public static IHtmlString TextBoxRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-			Expression<Func<TModel, TProperty>> expression, 
-			bool includeValidation, object htmlAttributes)
+			Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
 		{
 			if (expression == null)
 			{
@@ -71,10 +63,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.InnerHtml = hasIconAttached ? wrap.ToString() : wrap.InnerHtml;
 
 			// validation if required
-			if (includeValidation)
-			{
-				ctrl.InnerHtml += html.ValidationMessageFor(expression);
-			}
+			ctrl.InnerHtml += html.ValidationMessageFor(expression);
 
 			controlGroup.InnerHtml = lbl + ctrl;
 

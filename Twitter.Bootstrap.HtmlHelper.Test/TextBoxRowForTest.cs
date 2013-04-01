@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Routing;
+﻿using System.Web.Mvc;
 using Twitter.Bootstrap.HtmlHelpers.Test.Models;
 using Xunit;
 
@@ -71,14 +69,18 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		[Fact]
 		public void TextBoxRowFor_should_generate_validation_message_if_needed()
 		{
+			// arrange
+			var expected =
+				@"<div class=""control-group""><label class=""control-label"" for=""Id"">Id</label><div class=""controls""><input data-val=""true"" data-val-number=""The field Id must be a number."" data-val-required=""The Id field is required."" id=""Id"" name=""Id"" type=""text"" value=""0"" /><span class=""field-validation-valid"" data-valmsg-for=""Id"" data-valmsg-replace=""true""></span></div></div>";
+			
 			helper.ViewContext.ClientValidationEnabled = true;
 			helper.ViewContext.UnobtrusiveJavaScriptEnabled = true;
 
 			// Act
-			var html = helper.TextBoxRowFor(t => t.Id, true, null).ToHtmlString();
+			var html = helper.TextBoxRowFor(t => t.Id, null).ToHtmlString();
 
 			// Assert
-			Assert.Contains("field-validation-valid", html);
+			Assert.Equal(expected, html);
 		}
 
 		[Fact]
@@ -98,7 +100,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.TextBoxRowFor(t => t.Firstname, new { @hints = "This is first name."});
 
 			// assert
-			Assert.Contains("<span class=\"help-block\">This is first name.</span>", html.ToHtmlString());
+			Assert.Equal(@"<div class=""control-group""><label class=""control-label"" for=""Firstname"">First Name</label><div class=""controls""><input hints=""This is first name."" id=""Firstname"" name=""Firstname"" type=""text"" value="""" /><span class=""help-block"">This is first name.</span></div></div>", 
+				html.ToHtmlString());
 		}
 
 		[Fact]

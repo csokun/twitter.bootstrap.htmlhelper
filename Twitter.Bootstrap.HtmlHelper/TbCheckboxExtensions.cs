@@ -16,7 +16,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		{
 			// create controls block
 			var wrap = new TagBuilder("div");
-			wrap.AddCssClass("controls");
+			wrap.AddCssClass("control-group");
 
 			var controls = new TagBuilder("div");
 			controls.AddCssClass("controls");

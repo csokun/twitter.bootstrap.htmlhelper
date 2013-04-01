@@ -11,19 +11,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		public static IHtmlString DatepickerRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                              Expression<Func<TModel, TProperty>> expression)
 		{
-			return DatepickerRowFor(html, expression, false, null);
+			return DatepickerRowFor(html, expression, null);
 		}
 
 		public static IHtmlString DatepickerRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                              Expression<Func<TModel, TProperty>> expression,
 		                                                              object htmlAttributes)
-		{
-			return DatepickerRowFor(html, expression, false, htmlAttributes);
-		}
-
-		public static IHtmlString DatepickerRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                              Expression<Func<TModel, TProperty>> expression,
-		                                                              bool includeValidation, object htmlAttributes)
 		{
 			if (expression == null)
 			{
@@ -87,10 +80,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			ctrl.InnerHtml = wrap.ToString();
 
 			// validation if required
-			if (includeValidation)
-			{
-				ctrl.InnerHtml += html.ValidationMessageFor(expression).ToHtmlString();
-			}
+			ctrl.InnerHtml += html.ValidationMessageFor(expression).ToHtmlString();
 
 			controlGroup.InnerHtml = lbl + ctrl;
 
