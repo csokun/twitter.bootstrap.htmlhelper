@@ -30,16 +30,33 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		}
 
 		[Fact]
-		public void Should_generate_necessary_dom_content()
+		public void Should_generate_necessary_minimal_dom_el()
 		{
 			// arrange
-			const string expect = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""span2"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div></div>";
+			const string expectWrapper = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker"">";
+			const string expectInput = @"<input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" />";
+			const string expectIcon = @"<span class=""add-on""><i class=""icon-calendar""></i></span>";
 
 			// act
 			var html = helper.DatepickerRowFor(p => p.Birthdate).ToHtmlString();
 
 			// assert
-			Assert.Contains(expect, html);
+			Assert.Contains(expectWrapper, html);
+			Assert.Contains(expectInput, html);
+			Assert.Contains(expectIcon, html);
+		}
+
+		[Fact]
+		public void Should_generate_hidden_format_field()
+		{
+			// arrange
+			var expected = @"<input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""dd-MM-yyyy"" />";
+
+			// act
+			var html = helper.DatepickerRowFor(p => p.Birthdate, new { @data_date_format = "dd-MM-yyyy"}).ToHtmlString();
+
+			// assert
+			Assert.Contains(expected, html);
 		}
 	}
 }

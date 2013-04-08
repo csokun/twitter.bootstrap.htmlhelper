@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BreadcrumbsTest.cs" />
     <Compile Include="DatepickerForExtensionsTest.cs" />
+    <Compile Include="DatepickerModelBinderTest.cs" />
     <Compile Include="DropDownListHelperTest.cs" />
     <Compile Include="Models\MyOccupation.cs" />
     <Compile Include="Models\Person.cs" />

@@ -45,10 +45,12 @@
     <Compile Include="DropDownListRowForExtensions.cs" />
     <Compile Include="DropdownsExtensions.cs" />
     <Compile Include="EmailRowForExtensions.cs" />
+    <Compile Include="MvcBinder\DatepickerModelBinder.cs" />
     <Compile Include="NumberRowForExtensions.cs" />
     <Compile Include="PasswordRowForExtensions.cs" />
     <Compile Include="TbCheckboxExtensions.cs" />
     <Compile Include="TbPagingExtensions.cs" />
+    <Compile Include="TypeaheadExtensions.cs" />
     <Compile Include="ViewModels\CheckBoxItem.cs" />
     <Compile Include="ViewModels\NavBar.cs" />
     <Compile Include="NavBarExtensions.cs" />
