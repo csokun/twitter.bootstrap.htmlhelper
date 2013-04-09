@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
@@ -23,7 +24,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				throw new ArgumentNullException("expression");
 			}
 			
-			var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
 			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			
 			if (metadata.ModelType.Name != "DateTime")

@@ -64,6 +64,7 @@
     <Compile Include="TbCheckboxForExtensionsTest.cs" />
     <Compile Include="TbCheckboxListForTest.cs" />
     <Compile Include="TextBoxRowForTest.cs" />
+    <Compile Include="TypeaheadExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Twitter.Bootstrap.HtmlHelper\Twitter.Bootstrap.HtmlHelpers.csproj">

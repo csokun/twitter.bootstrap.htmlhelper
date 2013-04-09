@@ -24,8 +24,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				throw new ArgumentNullException("expression");
 			}
 
-			var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-			
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+			                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("control-group");
 
