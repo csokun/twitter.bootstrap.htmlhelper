@@ -28,6 +28,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.Breadcrumbs(menu).ToHtmlString();
 
 			// assert
+			Assert.Contains(@"class=""breadcrumb""", html);
 			Assert.Contains("<li class=\"active\">About</li>", html);
 		}
 	}

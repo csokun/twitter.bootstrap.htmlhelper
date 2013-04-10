@@ -46,6 +46,7 @@
     <Compile Include="DropdownsExtensions.cs" />
     <Compile Include="EmailRowForExtensions.cs" />
     <Compile Include="MvcBinder\DatepickerModelBinder.cs" />
+    <Compile Include="MvcFilters\MenuItemKeyAttribute.cs" />
     <Compile Include="NumberRowForExtensions.cs" />
     <Compile Include="PasswordRowForExtensions.cs" />
     <Compile Include="TbCheckboxExtensions.cs" />

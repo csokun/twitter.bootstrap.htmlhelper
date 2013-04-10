@@ -13,7 +13,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		{
 			var htmlString = new StringBuilder();
 
-			htmlString.Append("<ul class=\"breadcrumbs\">\r\n");
+			htmlString.Append("<ul class=\"breadcrumb\">\r\n");
 			var totalItem = menuItems.Count;
 			for (var i = 0; i < totalItem; i++)
 			{
