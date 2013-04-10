@@ -24,6 +24,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 		private string _route;
 		private string _action;
 		private string _controller;
+		private bool _visible	= true;
 
 		public string Text { get; set; }
 
@@ -49,5 +50,10 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 
 		public bool Selected { get; set; }
 
+		public bool Visible
+		{
+			get { return _visible; }
+			set { _visible = value; }
+		}
 	}
 }

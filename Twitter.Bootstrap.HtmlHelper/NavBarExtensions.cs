@@ -15,7 +15,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		{
 			// detect current url
 
-			var collapsible = @"
+			const string collapsible = @"
 						<button type=""button"" class=""btn btn-navbar"" data-toggle=""collapse"" data-target="".nav-collapse"">
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
@@ -26,7 +26,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			if (navBar.Fixed != NavBarDock.None)
 			{
-				placeholder.AddCssClass("navbar-fixed-" + Enum.GetName(typeof(NavBarDock), navBar.Fixed).ToLower());
+				var name = Enum.GetName(typeof (NavBarDock), navBar.Fixed);
+				if (name != null)
+					placeholder.AddCssClass("navbar-fixed-" + name.ToLower());
 			}
 
 			if (navBar.Inverse)
@@ -74,14 +76,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				container.InnerHtml += htmlString;
 			}
 
-
 			innerNavBar.InnerHtml = container.ToString();		
 			placeholder.InnerHtml = innerNavBar.ToString();
 
 			return MvcHtmlString.Create(placeholder.ToString(TagRenderMode.Normal));
 		}
 
-		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IList<TbMenuTree> tree)
+		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IEnumerable<TbMenuTree> tree)
 		{
 			if(tree == null) return;
 
@@ -90,9 +91,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				if (menuItem == null)
 				{
 					htmlStringBuilder.Append("<li class=\"divider\"></li>");
-
 					continue;
 				}
+
+				if (!menuItem.Visible) continue;
 
 				if (menuItem.Leaf)
 				{

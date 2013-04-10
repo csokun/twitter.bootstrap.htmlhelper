@@ -149,5 +149,24 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// assert
 			Assert.Contains("navbar navbar-inverse navbar-fixed-top", html);
 		}
+
+		[Fact]
+		public void NavBar_should_not_render_invisible_TbMenuItem()
+		{
+			// arrange
+			var navBar = new NavBar()
+			{
+				Items = new List<TbMenuTree>()
+						{
+							new TbMenuTree() {Text = "Home", Visible = false}
+						}
+			};
+
+			// act
+			var html = helper.NavBar(navBar, null).ToHtmlString();
+
+			// assert
+			Assert.DoesNotContain("Home", html);
+		}
 	}
 }
