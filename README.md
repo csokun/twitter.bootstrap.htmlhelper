@@ -14,11 +14,7 @@ will generate the following HTML:
         </div>
     </div>
 
-Or if you need validation:
-
-    @Html.TextBoxRowFor(t => t.Id, true)
-
-That will generate something like this HTML:
+Or if validation is enabled the following HTML dom is generated:
 
     <div class="control-group">
         <label class="control-label" for="Id">Id</label>
