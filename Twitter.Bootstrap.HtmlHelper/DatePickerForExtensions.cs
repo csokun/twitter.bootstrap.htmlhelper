@@ -130,21 +130,32 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		public static IHtmlString DatepickerFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                           Expression<Func<TModel, TProperty>> expression)
 		{
-			return DatepickerFor(html, expression, null);
+			return DatepickerFor(html, expression, true, null);
 		}
 
 		public static IHtmlString DatepickerFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                    Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
+		                                                           Expression<Func<TModel, TProperty>> expression, bool showLabel)
+		{
+			return DatepickerFor(html, expression, showLabel, null);
+		}
+
+		public static IHtmlString DatepickerFor<TModel, TProperty>(this HtmlHelper<TModel> html,
+		                                                    Expression<Func<TModel, TProperty>> expression, bool showLabel, object htmlAttributes)
 		{
 			VerifyExpression(html, expression);
 
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
+			var tagBuilder = DatepickerTagBuilder(html, expression, attributes).ToString();
+			if (!showLabel)
+			{
+				return MvcHtmlString.Create( tagBuilder );
+			}
+				
 			var label = html.LabelFor(expression);
-			var tb = DatepickerTagBuilder(html, expression, attributes);
 
-			return MvcHtmlString.Create(label + tb.ToString());
+			return MvcHtmlString.Create(label + tagBuilder);
 		}
 
 	}
