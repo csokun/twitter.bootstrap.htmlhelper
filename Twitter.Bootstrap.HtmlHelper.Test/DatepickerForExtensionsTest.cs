@@ -68,5 +68,19 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// assert
 			Assert.Contains(expected, html);
 		}
+
+		[Fact]
+		public void Should_generate_Datepicker_without_div_container()
+		{
+			// arrange
+			const string expected = @"<label for=""Birthdate"">Birthdate</label><div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div>";
+
+			// act
+			var html = helper.DatepickerFor(p => p.Birthdate);
+
+			// assert
+			Assert.Equal(expected, html.ToHtmlString());
+		}
+
 	}
 }

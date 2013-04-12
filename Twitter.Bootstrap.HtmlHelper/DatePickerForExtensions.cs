@@ -19,20 +19,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		                                                              Expression<Func<TModel, TProperty>> expression,
 		                                                              object htmlAttributes)
 		{
-			if (expression == null)
-			{
-				throw new ArgumentNullException("expression");
-			}
-			
+			VerifyExpression(html, expression);
+
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-
-			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-			
-			if (metadata.ModelType.Name != "DateTime" && metadata.ModelType.FullName != typeof(DateTime?).FullName)
-			{
-				throw new ArgumentException("Input value is not DateTime.");
-			}
 
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("control-group");
@@ -44,7 +34,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var ctrl = new TagBuilder("div");
 			ctrl.AddCssClass("controls");
 
-			var wrap = DatepickerTagBuilder(html, expression, attributes, metadata);
+			var wrap = DatepickerTagBuilder(html, expression, attributes);
 
 			ctrl.InnerHtml = wrap.ToString();
 
@@ -61,11 +51,28 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return MvcHtmlString.Create(controlGroup.ToString());
 		}
 
-		private static TagBuilder DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
-		                                                                  IDictionary<string, object> attributes, ModelMetadata metadata)
+		private static void VerifyExpression<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression)
 		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException("expression");
+			}
+
+			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+
+			if (metadata.ModelType.Name != "DateTime" && metadata.ModelType.FullName != typeof (DateTime?).FullName)
+			{
+				throw new ArgumentException("Input value is not DateTime.");
+			}
+		}
+
+		private static TagBuilder DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
+		                                                                  IDictionary<string, object> attributes)
+		{
+			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			var wrap = new TagBuilder("div");
 			wrap.AddCssClass("input-append date");
+
 			// id
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
@@ -121,9 +128,23 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		}
 
 		public static IHtmlString DatepickerFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                    Expression<Func<TProperty>> expression, object htmlAttribute)
+		                                                           Expression<Func<TModel, TProperty>> expression)
 		{
-			return MvcHtmlString.Empty;
+			return DatepickerFor(html, expression, null);
+		}
+
+		public static IHtmlString DatepickerFor<TModel, TProperty>(this HtmlHelper<TModel> html,
+		                                                    Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
+		{
+			VerifyExpression(html, expression);
+
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
+			var label = html.LabelFor(expression);
+			var tb = DatepickerTagBuilder(html, expression, attributes);
+
+			return MvcHtmlString.Create(label + tb.ToString());
 		}
 
 	}
