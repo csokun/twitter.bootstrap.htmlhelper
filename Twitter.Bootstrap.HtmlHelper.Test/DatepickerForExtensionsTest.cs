@@ -28,6 +28,16 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// assert
 			Assert.Contains("Input value is not DateTime.", ex.Message);
 		}
+		
+		[Fact]
+		public void Should_support_Nullable_DateTime()
+		{
+			// act
+			var html = helper.DatepickerRowFor(t => t.EmployDate);
+
+			// assert
+			Assert.NotEmpty(html.ToHtmlString());
+		}
 
 		[Fact]
 		public void Should_generate_necessary_minimal_dom_el()

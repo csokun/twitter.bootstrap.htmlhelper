@@ -12,6 +12,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test.Models
 		[Display(Name = "First Name")]
 		public string Firstname { get; set; }
 
+		public DateTime? EmployDate { get; set; }
+
 		public DateTime Birthdate { get; set; }
 
 		public string Name { get; set; }
