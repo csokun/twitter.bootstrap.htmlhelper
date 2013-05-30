@@ -40,7 +40,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			// validation if required
 			var validation = string.Format("{0}", html.ValidationMessageFor(expression, null, new { @class = "help-inline" }));
-			if (!string.IsNullOrWhiteSpace(validation))
+
+			if (!attributes.ContainsKey("readonly") && !string.IsNullOrWhiteSpace(validation))
 			{
 				ctrl.InnerHtml += validation;
 				//controlGroup.AddCssClass("error");
@@ -94,12 +95,28 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				                    ? html.AttributeEncode(attributes["data-date"])
 				                    : value);
 
-			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
 			wrap.InnerHtml += html.Hidden(fullName + ".DateFormat", dotNetDateFormat);
-			//wrap.InnerHtml += string.Format(@"<input type=""text"" class=""span2"" id=""{0}"" name=""{1}"" value=""{2}"" readonly size=16 />", fullName,
-			//																fullName, value);
-			wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
 
+			var readOnly = attributes.ContainsKey("readonly");
+
+			if (readOnly)
+			{
+				var clientValidationEnabled = html.ViewContext.ClientValidationEnabled;
+				var unobtrusiveJavaScriptEnabled = html.ViewContext.UnobtrusiveJavaScriptEnabled;
+				html.ViewContext.ClientValidationEnabled = false;
+				html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
+
+				wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
+				
+				html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
+				html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
+			}
+			else
+			{
+				wrap.InnerHtml += html.TextBox(fullName, value, new { @class = "input-small", @size = 16, @readonly = "readonly" });
+				wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
+			}
+				
 			if (attributes.ContainsKey("hints"))
 			{
 				wrap.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,14 +16,15 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		/// <summary>
 		/// Number of visiable page
 		/// </summary>
-		private static readonly int VisiblePages = 6;
+		private static readonly int VisiblePages = 10;
 
 		public static IHtmlString TbPaging(this HtmlHelper html, int pageCount, int currentPage)
 		{
+			if (pageCount <= 1) return MvcHtmlString.Empty;
+
 			// 1. should support both GET & POST
 			// 2. value should be store in hidden field (required JavaScript ???)
-			var httpRequest = HttpContext.Current.Request;
-			var defaultUrl = "";
+			var defaultUrl = RebuildQueryString(html);
 
 			var wrap = new TagBuilder("div");
 			wrap.AddCssClass("pagination");
@@ -31,35 +34,65 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// generate prev
 			ul.InnerHtml += (currentPage <= 1)
 				                ? @"<li class=""disabled""><span>&laquo;</span</li>"
-				                : string.Format(@"<li><a href=""{0}&PageIndex={1}"">&laquo;</a></li>", defaultUrl, currentPage - 1);
+												: string.Format(@"<li><a href=""{0}"">&laquo;</a></li>", PageLink(defaultUrl, currentPage -1));
 
 			// generate page sprite
 			if (pageCount < VisiblePages)
 			{
-				for (var i = 0; i < pageCount; i++)
-				{
-					if (i == currentPage)
-					{
-						ul.InnerHtml += string.Format(@"<li class=""active""><span>{0}</span></li>", currentPage);
-						continue;
-					}
-
-					ul.InnerHtml += string.Format(@"<li class=""active""><span>{0}</span></li>", currentPage); ;
-				}
+				WritePages(1, pageCount, currentPage, ul, defaultUrl);
 			}
 			else
-			{
-				// split ...
-				// <li class="disabled"><span>&laquo;</span></li>
+			{				
+				// split ...	
+				// head
+				WritePages(1, 5, currentPage, ul, defaultUrl);
+
+				// body
+				WriteCenterLinks(6, pageCount - 5, currentPage, ul, defaultUrl);
+						
+				// tail
+				WritePages(pageCount - 5, pageCount, currentPage, ul, defaultUrl);
 			}
 
 			// generate next
 			ul.InnerHtml += currentPage >= pageCount
 				                ? @"<li class=""disable""><span>&raquo;</span></li>"
-				                : string.Format(@"<li><a href=""{0}&PageIndex={1}"">&raquo;</a></li>", defaultUrl, currentPage + 1);
+				                : string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink( defaultUrl, currentPage + 1 ));
 
 			wrap.InnerHtml = ul.ToString();
 			return MvcHtmlString.Create(wrap.ToString());
+		}
+
+		private static void WriteCenterLinks(int startPage, int endPage, int currentPage, TagBuilder ul, string defaultUrl)
+		{
+			var totalPage = endPage - startPage;
+			if (totalPage > VisiblePages && (currentPage > startPage && currentPage < endPage))
+			{
+				var center = (int)Math.Ceiling(totalPage / 2.0d);
+
+				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+				WritePages(center -1, center +1, currentPage, ul, defaultUrl);
+				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+			}
+			else
+			{
+				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+			}
+		}
+
+		private static void WritePages(int startPage, int pageCount, int currentPage, TagBuilder ul, string defaultUrl)
+		{
+			for (var i = startPage; i <= pageCount; i++)
+			{
+				if (i == currentPage)
+				{
+					ul.InnerHtml += string.Format(@"<li class=""active""><span>{0}</span></li>", currentPage);
+					continue;
+				}
+
+				ul.InnerHtml += string.Format(@"<li><a href=""{0}"">{1}</a></li>", PageLink(defaultUrl, i), i);
+				;
+			}
 		}
 
 		public static IHtmlString TbPaging(this HtmlHelper html, string url, int pageCount)
@@ -75,30 +108,43 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 		#region Helpers
 
-		private static string RebuildQueryString()
+		private static string PageLink(string url, int pageIndex)
 		{
-			var httpRequest = HttpContext.Current.Request;
-			var url = httpRequest.Path;
-
-			var queryString = httpRequest.QueryString;
-			if (queryString.Count == 0) queryString = httpRequest.Form;
-
-			var queryStringBuilder = new StringBuilder();
-
-			for (var i = 0; i < queryString.Keys.Count; i++)
+			if (url.EndsWith("?"))
 			{
-				var key = queryString.Keys[i];
-				var value = queryString[i];
-
-				if ("pageindex" == key.ToLower() || "pagesize" == key.ToLower()) continue;
-
-				queryStringBuilder.AppendFormat("{0}={1}&", key, value);
+				return url + "PageIndex=" + pageIndex;
 			}
 
-			var queryStringLength = queryStringBuilder.Length;
+			return url + "&PageIndex=" + pageIndex;
+		}
 
-			if (queryStringLength > 0)
-				url += "?" + queryStringBuilder.ToString(0, queryStringLength - 1);
+		private static string RebuildQueryString(HtmlHelper htmlHelper)
+		{
+			var httpRequest = htmlHelper.ViewContext.HttpContext.Request;
+			var url = httpRequest.RawUrl;
+
+			var queryString = httpRequest.QueryString ?? httpRequest.Form;
+			if (queryString != null && queryString.Count > 0)
+			{
+				var queryStringBuilder = new StringBuilder();
+
+				foreach (KeyValuePair<string, string> query in queryString)
+				{
+					var key = query.Key;
+					var value = query.Value;
+
+					if ("pageindex" == key.ToLower() || "pagesize" == key.ToLower()) continue;
+
+					queryStringBuilder.AppendFormat("{0}={1}&", key, value);
+				}
+
+				var queryStringLength = queryStringBuilder.Length;
+
+				if (queryStringLength > 0)
+					url += "?" + queryStringBuilder.ToString(0, queryStringLength - 1);
+			}
+
+			if (url.IndexOf('?') == -1) url += "?";
 
 			return url;
 		}

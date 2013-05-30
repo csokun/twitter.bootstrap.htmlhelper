@@ -73,7 +73,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void DatepickerFor_Should_generate_Datepicker_without_div_container()
 		{
 			// arrange
-			const string expected = @"<label for=""Birthdate"">Birthdate</label><div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div>";
+			const string expected = @"<label for=""Birthdate"">Birthdate</label><div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" /><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div>";
 
 			// act
 			var html = helper.DatepickerFor(p => p.Birthdate);
@@ -86,13 +86,29 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void DatepickerFor_Should_genernate_Datepicker_without_label_el()
 		{
 			// arrange
-			const string expected = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div>";
+			const string expected = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" /><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div>";
 
 			// act
 			var html = helper.DatepickerFor(p => p.Birthdate, false);
 
 			// assert
 			Assert.Equal(expected, html.ToHtmlString());
+		}
+
+		[Fact]
+		public void DatepickerFor_should_not_generate_icon_and_validation_in_readOnly_mode()
+		{
+			// arrange
+			helper.ViewContext.ClientValidationEnabled = true;
+			helper.ViewContext.UnobtrusiveJavaScriptEnabled = true;
+			const string icon = @"<span class=""add-on""><i class=""icon-calendar""></i></span>";
+
+			// act
+			var html = helper.DatepickerRowFor(p => p.Birthdate, new {@readonly = "readonly"}).ToHtmlString();
+
+			// assert
+			Assert.DoesNotContain(icon, html);
+			Assert.DoesNotContain("data-val", html);
 		}
 	}
 }
