@@ -16,7 +16,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		/// <summary>
 		/// Number of visiable page
 		/// </summary>
-		private static readonly int VisiblePages = 10;
+		private const int VisiblePages = 10;
 
 		public static IHtmlString TbPaging(this HtmlHelper html, int pageCount, int currentPage)
 		{
@@ -30,34 +30,48 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			wrap.AddCssClass("pagination");
 
 			var ul = new TagBuilder("ul");
-			
+
 			// generate prev
-			ul.InnerHtml += (currentPage <= 1)
-				                ? @"<li class=""disabled""><span>&laquo;</span</li>"
-												: string.Format(@"<li><a href=""{0}"">&laquo;</a></li>", PageLink(defaultUrl, currentPage -1));
+			ul.InnerHtml += (currentPage - 1 < 1)
+												? @"<li class=""disabled""><span>&laquo;</span</li>"
+												: string.Format(@"<li><a href=""{0}"">&laquo;</a></li>", PageLink(defaultUrl, currentPage - 1));
 
 			// generate page sprite
-			if (pageCount < VisiblePages)
+			if (pageCount <= VisiblePages)
 			{
 				WritePages(1, pageCount, currentPage, ul, defaultUrl);
 			}
 			else
-			{				
-				// split ...	
-				// head
-				WritePages(1, 5, currentPage, ul, defaultUrl);
+			{
+				// split ...
+				const int segment = VisiblePages/2;
+				const int radius = 3;
+				var startOfPart2 = pageCount - segment;
 
+				var segment1InRadius = Math.Abs(segment - currentPage) <= radius;
+				var segment2InRadius = Math.Abs(startOfPart2 - currentPage) <= radius;
+
+				// head
+				WritePages(1, segment1InRadius ? segment + 3 : segment, currentPage, ul, defaultUrl);
+	
 				// body
-				WriteCenterLinks(6, pageCount - 5, currentPage, ul, defaultUrl);
-						
+				if (segment1InRadius || segment2InRadius)
+				{
+					ul.InnerHtml += @"<li class=""disable""><span>...</span></li>";
+				}
+				else
+				{
+					WriteCenterLinks(currentPage - 2, currentPage + 2, currentPage, ul, defaultUrl);
+				}
+
 				// tail
-				WritePages(pageCount - 5, pageCount, currentPage, ul, defaultUrl);
+				WritePages(segment2InRadius ? startOfPart2 - 3 : startOfPart2, pageCount, currentPage, ul, defaultUrl);
 			}
 
 			// generate next
-			ul.InnerHtml += currentPage >= pageCount
-				                ? @"<li class=""disable""><span>&raquo;</span></li>"
-				                : string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink( defaultUrl, currentPage + 1 ));
+			ul.InnerHtml += currentPage + 1 > pageCount
+												? @"<li class=""disable""><span>&raquo;</span></li>"
+												: string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink(defaultUrl, currentPage + 1));
 
 			wrap.InnerHtml = ul.ToString();
 			return MvcHtmlString.Create(wrap.ToString());
@@ -65,19 +79,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 		private static void WriteCenterLinks(int startPage, int endPage, int currentPage, TagBuilder ul, string defaultUrl)
 		{
-			var totalPage = endPage - startPage;
-			if (totalPage > VisiblePages && (currentPage > startPage && currentPage < endPage))
-			{
-				var center = (int)Math.Ceiling(totalPage / 2.0d);
+			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+			WritePages(startPage, endPage, currentPage, ul, defaultUrl);
+			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 
-				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-				WritePages(center -1, center +1, currentPage, ul, defaultUrl);
-				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-			}
-			else
-			{
-				ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-			}
 		}
 
 		private static void WritePages(int startPage, int pageCount, int currentPage, TagBuilder ul, string defaultUrl)
@@ -162,8 +167,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (pageCount < numberDisplayPage)
 				return fromPage;
 
-			if (pageIndex > (numberDisplayPage/2))
-				fromPage = pageIndex - (numberDisplayPage/2);
+			if (pageIndex > (numberDisplayPage / 2))
+				fromPage = pageIndex - (numberDisplayPage / 2);
 
 			if ((fromPage + numberDisplayPage - 1) > pageCount)
 				fromPage = pageCount - (numberDisplayPage - 1);
