@@ -13,7 +13,7 @@
 </head>
 <body>
     <div>
-        @Html.TbPaging(Model.PageCount, Model.PageIndex)
+        @Html.TbPaging(Model.PageCount, int.Parse(Request["PageIndex"]))
     </div>
 </body>
 </html>

@@ -127,7 +127,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		private static string RebuildQueryString(HtmlHelper htmlHelper)
 		{
 			var httpRequest = htmlHelper.ViewContext.HttpContext.Request;
-			var url = httpRequest.RawUrl;
+			var url = httpRequest.Path;
 
 			var queryString = httpRequest.QueryString ?? httpRequest.Form;
 			if (queryString != null && queryString.Count > 0)
