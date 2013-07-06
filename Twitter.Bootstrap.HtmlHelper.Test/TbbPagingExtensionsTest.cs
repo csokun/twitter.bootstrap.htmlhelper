@@ -21,6 +21,21 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			Assert.Equal(string.Empty, html);
 		}
 
+		[Fact]
+		public void When_pageIndex_less_than_zero_make_default_one()
+		{
+			// arrange
+			var helper = MvcHelper.GetHtmlHelper();
+			var pageCount = 3;
+			var currentPage = 0;
+
+			// act
+			var html = helper.TbPaging(pageCount, currentPage).ToHtmlString();
+
+			// assert
+			Assert.Contains("<span>1</span>", html);
+		}
+
 		// [1] 2
 		[Fact]
 		public void When_pageCount_greater_than_one_should_render_1()

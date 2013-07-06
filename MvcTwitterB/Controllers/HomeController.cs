@@ -7,11 +7,11 @@ namespace BootstrapMvcSample.Controllers
 {
 	public class HomeController : BootstrapBaseController
 	{
-		private static List<HomeInputModel> _models = ModelIntializer.CreateHomeInputModels();
+		private static List<HomeInputModel> _models = 
+			ModelIntializer.CreateHomeInputModels();
 
 		public ActionResult Index()
 		{
-
 			var homeInputModels = _models;
 			return View(homeInputModels);
 		}

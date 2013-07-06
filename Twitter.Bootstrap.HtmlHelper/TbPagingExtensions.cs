@@ -21,6 +21,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		public static IHtmlString TbPaging(this HtmlHelper html, int pageCount, int currentPage)
 		{
 			if (pageCount <= 1) return MvcHtmlString.Empty;
+			if (currentPage <= 0) currentPage = 1;
 
 			// 1. should support both GET & POST
 			// 2. value should be store in hidden field (required JavaScript ???)
@@ -133,10 +134,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			{
 				var queryStringBuilder = new StringBuilder();
 
-				foreach (KeyValuePair<string, string> query in queryString)
+				foreach (var query in queryString.AllKeys)
 				{
-					var key = query.Key;
-					var value = query.Value;
+					var key = query;
+					var value = queryString[query];
 
 					if ("pageindex" == key.ToLower() || "pagesize" == key.ToLower()) continue;
 
