@@ -23,6 +23,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			
+			var name = ExpressionHelper.GetExpressionText(expression);
+			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("control-group");
@@ -34,9 +37,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var ctrl = new TagBuilder("div");
 			ctrl.AddCssClass("controls");
 
-			var wrap = DatepickerTagBuilder(html, expression, attributes);
+			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
 
-			ctrl.InnerHtml = wrap.ToString();
+			ctrl.InnerHtml = wrap;
 
 			// validation if required
 			var validation = string.Format("{0}", html.ValidationMessageFor(expression, null, new { @class = "help-inline" }));
@@ -71,6 +74,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		                                                                  IDictionary<string, object> attributes)
 		{
 			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+			var div1 = new TagBuilder("div");
 			var wrap = new TagBuilder("div");
 			wrap.AddCssClass("input-append date");
 
@@ -95,25 +99,20 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				                    ? html.AttributeEncode(attributes["data-date"])
 				                    : value);
 
-			wrap.InnerHtml += html.Hidden(fullName + ".DateFormat", dotNetDateFormat);
-
 			var readOnly = attributes.ContainsKey("readonly");
+			// date validation @ client-side is troublesome~
+			var clientValidationEnabled = html.ViewContext.ClientValidationEnabled;
+			var unobtrusiveJavaScriptEnabled = html.ViewContext.UnobtrusiveJavaScriptEnabled;
+			html.ViewContext.ClientValidationEnabled = false;
+			html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
 
-			if (readOnly)
-			{
-				var clientValidationEnabled = html.ViewContext.ClientValidationEnabled;
-				var unobtrusiveJavaScriptEnabled = html.ViewContext.UnobtrusiveJavaScriptEnabled;
-				html.ViewContext.ClientValidationEnabled = false;
-				html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
-
-				wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
+			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
 				
-				html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
-				html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
-			}
-			else
+			html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
+			html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
+
+			if (!readOnly)
 			{
-				wrap.InnerHtml += html.TextBox(fullName, value, new { @class = "input-small", @size = 16, @readonly = "readonly" });
 				wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
 			}
 				
@@ -121,7 +120,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			{
 				wrap.InnerHtml += string.Format("<span class=\"help-block\">{0}</span>", html.Encode(attributes["hints"]));
 			}
-			return wrap;
+
+			div1.InnerHtml = wrap.ToString() + html.Hidden(fullName + ".DateFormat", dotNetDateFormat);
+
+			return div1;
 		}
 
 		private static string GetDateValue(ModelMetadata metadata, string dotNetDateFormat)
@@ -164,7 +166,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
-			var tagBuilder = DatepickerTagBuilder(html, expression, attributes).ToString();
+			var tagBuilder = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
+
 			if (!showLabel)
 			{
 				return MvcHtmlString.Create( tagBuilder );

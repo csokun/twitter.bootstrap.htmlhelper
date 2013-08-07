@@ -1,0 +1,20 @@
+﻿@model MvcTwitterB.Models.DateTest
+@using Twitter.Bootstrap.HtmlHelpers;
+@{
+	ViewBag.Title = "title";
+}
+
+<h2>title</h2>
+<form method="GET">
+@Html.DatepickerFor(m => m.Date1, false, new { @data_date_format = "dd-mm-yyyy"})
+	<button type="submit">Search</button>
+	</form>
+@section Scripts
+{
+	<script>
+	$(function() {
+		$('.date').datepicker();
+	});
+	
+</script>
+}

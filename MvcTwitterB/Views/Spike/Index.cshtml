@@ -12,8 +12,8 @@
     <title>Index</title>
 </head>
 <body>
-    <div>
-        @Html.TbPaging(Model.PageCount, int.Parse(Request["PageIndex"]))
-    </div>
+	<div>
+		@Html.TbPaging(Model.PageCount, int.Parse("0" + Request["PageIndex"]))
+	</div>
 </body>
 </html>

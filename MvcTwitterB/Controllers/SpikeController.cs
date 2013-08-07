@@ -17,5 +17,12 @@ namespace MvcTwitterB.Controllers
             return View(new PagedResult() { PageCount =  3, PageIndex = 1});
         }
 
+			public ActionResult Date()
+			{
+				var model = new DateTest();
+				TryUpdateModel(model);
+
+				return View(model);
+			}
     }
 }

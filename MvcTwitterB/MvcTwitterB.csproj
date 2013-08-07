@@ -132,6 +132,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DateTest.cs" />
     <Compile Include="Models\FavoriteArtistModel.cs" />
     <Compile Include="Models\HomeInputModel.cs" />
     <Compile Include="Models\PagedResult.cs" />
@@ -152,9 +153,11 @@
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker.css" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Global.asax" />
+    <Content Include="scripts\bootstrap-datepicker.js" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\html5shiv.js" />
@@ -197,6 +200,7 @@
     <Content Include="Views\ExampleLayouts\Fluid.cshtml" />
     <Content Include="Views\Checkbox\Index.cshtml" />
     <Content Include="Views\Spike\Index.cshtml" />
+    <Content Include="Views\Spike\Date.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -34,7 +34,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			// generate prev
 			ul.InnerHtml += (currentPage - 1 < 1)
-												? @"<li class=""disabled""><span>&laquo;</span</li>"
+												? @"<li class=""disabled""><span>&laquo;</span></li>"
 												: string.Format(@"<li><a href=""{0}"">&laquo;</a></li>", PageLink(defaultUrl, currentPage - 1));
 
 			// generate page sprite
@@ -58,7 +58,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				// body
 				if (segment1InRadius || segment2InRadius)
 				{
-					ul.InnerHtml += @"<li class=""disable""><span>...</span></li>";
+					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 				else
 				{
@@ -71,7 +71,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			// generate next
 			ul.InnerHtml += currentPage + 1 > pageCount
-												? @"<li class=""disable""><span>&raquo;</span></li>"
+												? @"<li class=""disabled""><span>&raquo;</span></li>"
 												: string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink(defaultUrl, currentPage + 1));
 
 			wrap.InnerHtml = ul.ToString();
@@ -127,7 +127,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		private static string RebuildQueryString(HtmlHelper htmlHelper)
 		{
 			var httpRequest = htmlHelper.ViewContext.HttpContext.Request;
-			var url = httpRequest.Path;
+			var url = httpRequest.Path ?? string.Empty;
 
 			var queryString = httpRequest.QueryString ?? httpRequest.Form;
 			if (queryString != null && queryString.Count > 0)
