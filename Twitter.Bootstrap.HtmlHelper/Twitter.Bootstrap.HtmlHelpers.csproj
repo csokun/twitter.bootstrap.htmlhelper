@@ -43,7 +43,7 @@
     <Compile Include="BreadcrumbsExtensions.cs" />
     <Compile Include="DatePickerForExtensions.cs" />
     <Compile Include="DropDownListRowForExtensions.cs" />
-    <Compile Include="DropdownsExtensions.cs" />
+    <Compile Include="ButtonDropdownsExtensions.cs" />
     <Compile Include="EmailRowForExtensions.cs" />
     <Compile Include="MvcBinder\DatepickerModelBinder.cs" />
     <Compile Include="MvcFilters\MenuItemKeyAttribute.cs" />

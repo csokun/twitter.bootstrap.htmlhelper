@@ -19,11 +19,11 @@ namespace BootstrapSupport
                 ));
 
             bundles.Add(new StyleBundle("~/content/css").Include(
-                "~/Content/bootstrap.css",
-								 "~/Content/datepicker.css",
-                "~/Content/body.css",
+                "~/Content/bootstrap/bootstrap.css",
+								"~/Content/datepicker.css",
+                "~/Content/body.css"/*,
                 "~/Content/bootstrap-responsive.css",
-                "~/Content/bootstrap-mvc-validation.css"
+                "~/Content/bootstrap-mvc-validation.css"*/
                 ));
         }
     }
