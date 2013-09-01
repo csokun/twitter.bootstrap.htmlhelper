@@ -28,14 +28,14 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 
 			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			controlGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "control-label" }).ToHtmlString();
+			var lbl = html.LabelFor(expression, new { @class = "col-lg-2 control-label" }).ToHtmlString();
 
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
+			ctrl.AddCssClass("col-lg-10");
 
 			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
 

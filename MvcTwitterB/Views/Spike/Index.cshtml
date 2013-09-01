@@ -13,6 +13,7 @@
 </head>
 <body>
 	<div>
+		@Html.TextBoxRowFor(m=>m.PageCount)
 		@Html.TbPaging(Model.PageCount, int.Parse("0" + Request["PageIndex"]))
 	</div>
 </body>

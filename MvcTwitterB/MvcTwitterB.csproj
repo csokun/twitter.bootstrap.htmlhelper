@@ -207,6 +207,7 @@
     <Content Include="Views\Checkbox\Index.cshtml" />
     <Content Include="Views\Spike\Index.cshtml" />
     <Content Include="Views\Spike\Date.cshtml" />
+    <Content Include="Views\Spike\Modal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

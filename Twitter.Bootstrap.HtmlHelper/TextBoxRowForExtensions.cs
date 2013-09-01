@@ -28,14 +28,14 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
 			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			controlGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new {@class = "control-label"}).ToHtmlString();
+			var lbl = html.LabelFor(expression, new {@class = "col-lg-2 control-label"}).ToHtmlString();
 	
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
+			ctrl.AddCssClass("col-lg-10");
 			
 			// actual controls
 			var hasIconAttached = attributes.ContainsKey("prepend") || attributes.ContainsKey("append");
@@ -45,15 +45,26 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (attributes.ContainsKey("prepend"))
 			{
 				wrap.AddCssClass("input-prepend");
-				wrap.InnerHtml = string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["prepend"]));
+				wrap.InnerHtml = string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["prepend"]));
 			} 
-			
+
+			if (attributes.ContainsKey("class")
+			    && !attributes["class"].ToString().Contains("form-control"))
+			{
+				attributes.Add("class", "form-control");
+			}
+			else if (attributes.ContainsKey("class")
+					&& attributes["class"].ToString().Contains("form-control"))
+			{
+				attributes["class"] = "form-control " + attributes["class"];
+			}
+
 			wrap.InnerHtml += html.TextBoxFor(expression, attributes);
 
 			if (attributes.ContainsKey("append"))
 			{
 				wrap.AddCssClass("input-append");
-				wrap.InnerHtml += string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["append"]));
+				wrap.InnerHtml += string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["append"]));
 			}
 
 			if (attributes.ContainsKey("hints"))
@@ -69,7 +80,6 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (!string.IsNullOrWhiteSpace(validation))
 			{
 				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
 			}
 
 			controlGroup.InnerHtml = lbl + ctrl;

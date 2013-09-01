@@ -11,7 +11,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 {
 	public static class NavBarExtensions
 	{
-		public static IHtmlString NavBar(this HtmlHelper html, NavBar navBar, object htmlAttributes)
+		public static IHtmlString NavBar(this HtmlHelper html, NavBar navBar, object htmlAttributes = null)
 		{
 			// detect current url
 			const string defaultNavCollapseTarget = ".navbar-ex1-collapse";
@@ -80,7 +80,16 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			elements.Append("</ul>");
 
 			innerNavBar.InnerHtml = elements.ToString();
-			placeholder.InnerHtml = header + innerNavBar.ToString();
+
+			if (attributes.ContainsKey("wrap") && attributes["wrap"].Equals("false"))
+			{
+				placeholder.InnerHtml = header + innerNavBar.ToString();
+			}
+			else
+			{
+				placeholder.InnerHtml = "<div class=\"container\">" + header + innerNavBar + "</div>"; 
+			}
+			
 
 			return MvcHtmlString.Create(placeholder.ToString(TagRenderMode.Normal));
 		}
