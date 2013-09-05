@@ -46,17 +46,23 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			{
 				wrap.AddCssClass("input-prepend");
 				wrap.InnerHtml = string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["prepend"]));
-			} 
+			}
 
-			if (attributes.ContainsKey("class")
-			    && !attributes["class"].ToString().Contains("form-control"))
+			var hasClassAttr = attributes.ContainsKey("class");
+			if (hasClassAttr)
+			{
+				if (!attributes["class"].ToString().Contains("form-control"))
+				{
+					attributes.Add("class", "form-control");
+				}
+				else
+				{
+					attributes["class"] = "form-control " + attributes["class"];
+				}
+			}
+			else
 			{
 				attributes.Add("class", "form-control");
-			}
-			else if (attributes.ContainsKey("class")
-					&& attributes["class"].ToString().Contains("form-control"))
-			{
-				attributes["class"] = "form-control " + attributes["class"];
 			}
 
 			wrap.InnerHtml += html.TextBoxFor(expression, attributes);

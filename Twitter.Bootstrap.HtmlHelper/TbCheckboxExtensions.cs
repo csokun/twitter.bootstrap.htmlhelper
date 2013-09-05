@@ -12,10 +12,19 @@ namespace Twitter.Bootstrap.HtmlHelpers
 	public static class TbCheckboxExtensions
 	{
 		public static IHtmlString TbCheckboxFor<TModel>(this HtmlHelper<TModel> html,
-																																		Expression<Func<TModel, bool>> expression)
+																																		Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
 		{
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
 			// create controls block
 			var wrap = new TagBuilder("div");
+			
+			if (attributes.ContainsKey("offset"))
+			{
+				wrap.AddCssClass("col-lg-offset-" + html.AttributeEncode( attributes["offset"]));
+			}
+
 			wrap.AddCssClass("checkbox");
 
 			// wrap
