@@ -31,12 +31,14 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			controlGroup.AddCssClass("form-group");
 
 			// create label
+			// HACKME: this only work for horizontal-form
 			var lbl = html.LabelFor(expression, new {@class = "col-lg-2 control-label"}).ToHtmlString();
 	
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("col-lg-10");
-			
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("gridcol", 10));
+			attributes.Remove("gridcol");
+
 			// actual controls
 			var hasIconAttached = attributes.ContainsKey("prepend") || attributes.ContainsKey("append");
 
@@ -48,22 +50,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				wrap.InnerHtml = string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["prepend"]));
 			}
 
-			var hasClassAttr = attributes.ContainsKey("class");
-			if (hasClassAttr)
-			{
-				if (!attributes["class"].ToString().Contains("form-control"))
-				{
-					attributes.Add("class", "form-control");
-				}
-				else
-				{
-					attributes["class"] = "form-control " + attributes["class"];
-				}
-			}
-			else
-			{
-				attributes.Add("class", "form-control");
-			}
+			attributes.Ensure("class", "form-control");
 
 			wrap.InnerHtml += html.TextBoxFor(expression, attributes);
 

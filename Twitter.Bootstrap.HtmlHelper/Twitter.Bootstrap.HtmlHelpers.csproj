@@ -52,6 +52,7 @@
     <Compile Include="TbCheckboxExtensions.cs" />
     <Compile Include="TbPagingExtensions.cs" />
     <Compile Include="TypeaheadExtensions.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="ViewModels\CheckBoxItem.cs" />
     <Compile Include="ViewModels\NavBar.cs" />
     <Compile Include="NavBarExtensions.cs" />

@@ -31,17 +31,22 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
 			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			controlGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "control-label" }).ToHtmlString();
+			var lbl = html.LabelFor(expression, new { @class = "col-lg-2 control-label" }).ToHtmlString();
 
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
+		
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("gridcol", 10));
+			attributes.Remove("gridcol");
 
 			// actual controls
+			attributes.Ensure("class", "form-control");
+
 			var input = html.DropDownListFor(expression, selectList, attributes);
+
 			ctrl.InnerHtml = input.ToHtmlString();
 			if (attributes.ContainsKey("hints"))
 			{
