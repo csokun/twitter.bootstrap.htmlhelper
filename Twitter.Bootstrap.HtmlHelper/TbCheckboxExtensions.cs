@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -19,6 +18,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			var offset = attributes.Get<int>("offset", 2);
 			var cols = 12 - offset;
+			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 
 			var content = new StringBuilder();
 
@@ -28,17 +28,17 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (!inline)
 			{
 				content.Append(@"<div class=""form-group"">");
-				content.AppendFormat(@"	<div class=""col-lg-offset-{0} col-lg-{1}", offset, cols);
+				content.AppendFormat(@"	<div class=""col-lg-offset-{0} col-lg-{1}"">", offset, cols);
 			}
 
 			content.Append(@"<div class=""checkbox""><label>");			
 			content.Append(html.CheckBoxFor(expression, new {@class = "checkbox"}).ToHtmlString());
+			content.Append(html.Encode(metadata.GetDisplayName()));
 			content.Append(@"</label></div>");
 
 			if (!inline)
 			{
-				content.Append(@"</div>");
-				content.Append(@"</div>");			
+				content.Append(@"</div></div>");
 			}
 
 			return MvcHtmlString.Create(content.ToString());
