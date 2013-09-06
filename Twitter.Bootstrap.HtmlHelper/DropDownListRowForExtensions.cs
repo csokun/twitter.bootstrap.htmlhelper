@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -17,10 +18,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		}
 
 
-		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
-			Expression<Func<TModel, TProperty>> expression,
-			IEnumerable<SelectListItem> selectList, 
-			object htmlAttributes)
+		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
+		                                                                Expression<Func<TModel, TProperty>> expression,
+		                                                                IEnumerable<SelectListItem> selectList,
+		                                                                object htmlAttributes)
 		{
 			if (expression == null)
 			{
@@ -28,19 +29,35 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 
 			var attributes = htmlAttributes as IDictionary<string, object> ??
-				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "col-lg-2 control-label" }).ToHtmlString();
+			var label = attributes.GetString("label", string.Empty);
 
+			var lbl = html.LabelFor(expression, new
+				{
+					@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
+				}).ToHtmlString();
+			attributes.Remove("labelcols");
+
+			if (label != string.Empty)
+			{
+				attributes.Remove("label");
+
+				var regEx = new Regex("(<label.+?>)(.+?)</label>");
+				var match = regEx.Match(lbl);
+
+				lbl = string.Format("{0}{1}</label>", match.Groups[1], html.Encode(label));
+			}
+	
 			// create controls block
 			var ctrl = new TagBuilder("div");
-		
-			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("gridcol", 10));
-			attributes.Remove("gridcol");
+
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 10));
+			attributes.Remove("controlcols");
 
 			// actual controls
 			attributes.Ensure("class", "form-control");

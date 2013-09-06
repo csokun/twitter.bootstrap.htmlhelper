@@ -31,5 +31,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			
 			return (T) attributes[key];
 		}
+
+		internal static string GetString(this IDictionary<string, object> attributes, string key, string defaultValue)
+		{
+			return !attributes.ContainsKey(key) ? defaultValue : attributes[key].ToString();
+		}
 	}
 }

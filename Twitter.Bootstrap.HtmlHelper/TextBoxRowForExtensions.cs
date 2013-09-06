@@ -32,12 +32,16 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			// create label
 			// HACKME: this only work for horizontal-form
-			var lbl = html.LabelFor(expression, new {@class = "col-lg-2 control-label"}).ToHtmlString();
-	
+			var lbl = html.LabelFor(expression, new
+			{
+				@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
+			}).ToHtmlString();
+			attributes.Remove("labelcols");
+
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("gridcol", 10));
-			attributes.Remove("gridcol");
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 10));
+			attributes.Remove("controlcols");
 
 			// actual controls
 			var hasIconAttached = attributes.ContainsKey("prepend") || attributes.ContainsKey("append");
@@ -46,7 +50,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			if (attributes.ContainsKey("prepend"))
 			{
-				wrap.AddCssClass("input-prepend");
+				wrap.AddCssClass("input-group");
 				wrap.InnerHtml = string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["prepend"]));
 			}
 
@@ -56,7 +60,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			if (attributes.ContainsKey("append"))
 			{
-				wrap.AddCssClass("input-append");
+				wrap.AddCssClass("input-group");
 				wrap.InnerHtml += string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["append"]));
 			}
 

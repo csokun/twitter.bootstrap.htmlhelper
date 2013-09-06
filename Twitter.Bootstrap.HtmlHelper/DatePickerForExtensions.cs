@@ -31,7 +31,11 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			controlGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "col-lg-2 control-label" }).ToHtmlString();
+			var lbl = html.LabelFor(expression, new
+			{
+				@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
+			}).ToHtmlString();
+			attributes.Remove("labelcols");
 
 			// create controls block
 			var ctrl = new TagBuilder("div");

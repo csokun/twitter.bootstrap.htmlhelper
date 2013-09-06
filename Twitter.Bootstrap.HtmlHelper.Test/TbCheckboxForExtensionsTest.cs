@@ -22,13 +22,13 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			};
 
 			var helper = MvcHelper.GetHtmlHelper(viewData);
-			var expected = @"<div class=""checkbox""><label><input checked=""checked"" class=""checkbox"" id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" /><input name=""IsActive"" type=""hidden"" value=""false"" />&nbsp;IsActive</label></div>";
 
 			// act
 			var html = helper.TbCheckboxFor(m => m.IsActive).ToHtmlString();
 
 			// assert
-			Assert.Equal(expected, html);
+			Assert.Contains(@"<div class=""checkbox"">", html);
+			Assert.Contains(@"<label>", html);
 		}
 
 	}

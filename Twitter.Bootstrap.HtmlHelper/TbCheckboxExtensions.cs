@@ -12,50 +12,50 @@ namespace Twitter.Bootstrap.HtmlHelpers
 	public static class TbCheckboxExtensions
 	{
 		public static IHtmlString TbCheckboxFor<TModel>(this HtmlHelper<TModel> html,
-																																		Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
+			Expression<Func<TModel, bool>> expression, object htmlAttributes = null)
 		{
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
-			// create controls block
-			var wrap = new TagBuilder("div");
+			var offset = attributes.Get<int>("offset", 2);
+			var cols = 12 - offset;
+
+			var content = new StringBuilder();
+
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
 			
-			if (attributes.ContainsKey("offset"))
+			if (!inline)
 			{
-				wrap.AddCssClass("col-lg-offset-" + html.AttributeEncode( attributes["offset"]));
+				content.Append(@"<div class=""form-group"">");
+				content.AppendFormat(@"	<div class=""col-lg-offset-{0} col-lg-{1}", offset, cols);
 			}
 
-			wrap.AddCssClass("checkbox");
+			content.Append(@"<div class=""checkbox""><label>");			
+			content.Append(html.CheckBoxFor(expression, new {@class = "checkbox"}).ToHtmlString());
+			content.Append(@"</label></div>");
 
-			// wrap
-			wrap.InnerHtml = LabelCheckbox(html, expression);
+			if (!inline)
+			{
+				content.Append(@"</div>");
+				content.Append(@"</div>");			
+			}
 
-			return MvcHtmlString.Create(wrap.ToString());
-		}
-
-		private static string LabelCheckbox<TModel>(HtmlHelper<TModel> html, Expression<Func<TModel, bool>> expression, bool inline = false)
-		{
-			const string pattern = "<label.+?>(.+?</label>)";
-			var checkBox = html.CheckBoxFor(expression, new {@class="checkbox"}).ToHtmlString();
-			var label = html.LabelFor(expression, new {@class = inline ? "checkbox inline" : "checkbox"}).ToHtmlString();
-
-			// search & replace labelText with checkbox 
-			var regEx = new Regex(pattern);
-			var match = regEx.Match(label);
-
-			var labelCheckbox = string.Format("<label>{0}&nbsp;{1}", checkBox, match.Groups[1]);
-			return labelCheckbox;
+			return MvcHtmlString.Create(content.ToString());
 		}
 
 		public static IHtmlString TbCheckboxListRowFor<TModel>(this HtmlHelper<TModel> html,
-			Expression<Func<TModel, IEnumerable<SelectListItem>>> expression, bool inline)
+			Expression<Func<TModel, IEnumerable<SelectListItem>>> expression, object htmlAttributes = null)
 		{
 			if (expression == null)
 			{
 				throw new ArgumentNullException("expression");
 			}
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 			
-			ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+			var inline = attributes.Get<bool>("inline", false);
+			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			var selectList = metadata.Model as IEnumerable<SelectListItem>;
 			if (selectList == null)
 			{
@@ -63,12 +63,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 
 			var name = ExpressionHelper.GetExpressionText(expression);
-			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
+			var fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 			
 			var dom = new StringBuilder();
-			dom.Append(@"<div class=""col-lg-10"">");
+			dom.Append(@"<div class=""form-group"">");
+
+			dom.Append(@"<div class=""col-lg-offset-2 col-lg-10"">");
 			
-			// label
 			string labelText = metadata.DisplayName ?? metadata.PropertyName;
 			dom.AppendFormat(@"<label class=""col-lg-2 control-label"">{0}</label>", html.Encode(labelText));
 
@@ -82,6 +83,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 				elementName = html.AttributeEncode(elementName);
 
+				if (!inline)
+					dom.Append(@"<div class=""checkbox"">");
+
 				// checkbox generator
 				dom.AppendFormat("<label{0}>", inline ? " class=\"checkbox-inline\"" : string.Empty);
 				dom.AppendFormat(@"<input type=""hidden"" name=""{0}.Value"" value=""{1}"" />", elementName,html.AttributeEncode(item.Value));
@@ -90,10 +94,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				dom.AppendFormat(@"<input type=""hidden"" name=""{0}.Selected"" value=""false"" />", elementName);
 				dom.AppendFormat(" {0}</label>", html.AttributeEncode(item.Text));
 
+				if (!inline)
+					dom.Append(@"</div>");
+
 				i++;
 			}
 
-			dom.Append("</div>");
+			dom.Append("</div></div>");
 			return MvcHtmlString.Create(dom.ToString());
 		}
 	}
