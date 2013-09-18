@@ -70,11 +70,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				else
 				{
 					dropdown.Append("<li>");
-					dropdown.Append(html.RouteLink(item.Text, item.Route, new
-							{
-								action = item.Action, 
-								controller = item.Controller
-							}));
+					
+					dropdown.Append(html.RouteLink(
+						item.Text, item.RouteName,
+						item.RouteValues,
+						item.Attributes));
+
 					dropdown.Append("</li>");
 				}
 			}

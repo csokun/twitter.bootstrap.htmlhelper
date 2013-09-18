@@ -76,7 +76,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 							new TbMenuTree()
 								{
 									Text = "About", 
-									Action = "About", 
+									RouteValues = new { @action = "About", @controller = "Home" }, 
 									Selected = true,
 									Items = new List<TbMenuTree>()
 								}
@@ -103,7 +103,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 							new TbMenuTree()
 								{
 									Text = "About", 
-									Action = "About", 
+									RouteValues = new { @action = "About" , @controller = "Home"}, 
 									Selected = true,
 									Items = new List<TbMenuTree>()
 										{

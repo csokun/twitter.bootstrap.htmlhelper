@@ -12,16 +12,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                                Expression<Func<TModel, TProperty>> expression,
-		                                                                IEnumerable<SelectListItem> selectList)
-		{
-			return DropDownListRowFor(html, expression, selectList, null);
-		}
-
-
-		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
-		                                                                Expression<Func<TModel, TProperty>> expression,
 		                                                                IEnumerable<SelectListItem> selectList,
-		                                                                object htmlAttributes)
+		                                                                object htmlAttributes = null)
 		{
 			if (expression == null)
 			{
@@ -34,25 +26,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("form-group");
 
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
+
 			// create label
-			var label = attributes.GetString("label", string.Empty);
+			var lbl = html.WriteLabelFor(expression, attributes, inline);
 
-			var lbl = html.LabelFor(expression, new
-				{
-					@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
-				}).ToHtmlString();
-			attributes.Remove("labelcols");
-
-			if (label != string.Empty)
-			{
-				attributes.Remove("label");
-
-				var regEx = new Regex("(<label.+?>)(.+?)</label>");
-				var match = regEx.Match(lbl);
-
-				lbl = string.Format("{0}{1}</label>", match.Groups[1], html.Encode(label));
-			}
-	
 			// create controls block
 			var ctrl = new TagBuilder("div");
 
@@ -75,10 +54,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (!string.IsNullOrWhiteSpace(validation))
 			{
 				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
+			controlGroup.InnerHtml = lbl + (inline ? ctrl.InnerHtml : ctrl.ToString());
 
 			return MvcHtmlString.Create(controlGroup.ToString());
 		}

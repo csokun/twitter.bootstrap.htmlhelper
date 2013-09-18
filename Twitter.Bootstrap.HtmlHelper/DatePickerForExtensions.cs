@@ -27,8 +27,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 
-			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("form-group");
+			var formGroup = new TagBuilder("div");
+			formGroup.AddCssClass("form-group");
 
 			// create label
 			var lbl = html.LabelFor(expression, new
@@ -38,25 +38,19 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			attributes.Remove("labelcols");
 
 			// create controls block
-			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("col-lg-10");
-
 			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
 
-			ctrl.InnerHtml = wrap;
-
+			formGroup.InnerHtml = lbl + wrap;
+			
 			// validation if required
 			var validation = string.Format("{0}", html.ValidationMessageFor(expression, null, new { @class = "help-inline" }));
 
 			if (!attributes.ContainsKey("readonly") && !string.IsNullOrWhiteSpace(validation))
 			{
-				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
+				formGroup.InnerHtml += validation;
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
-
-			return MvcHtmlString.Create(controlGroup.ToString());
+			return MvcHtmlString.Create(formGroup.ToString());
 		}
 
 		private static void VerifyExpression<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression)
@@ -79,8 +73,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		{
 			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			var div1 = new TagBuilder("div");
+
 			var wrap = new TagBuilder("div");
-			wrap.AddCssClass("input-append date");
+			wrap.AddCssClass("input-group date");
 
 			// id
 			var name = ExpressionHelper.GetExpressionText(expression);
@@ -104,20 +99,21 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				                    : value);
 
 			var readOnly = attributes.ContainsKey("readonly");
-			// date validation @ client-side is troublesome~
+
+			// Date validation @ client-side is troublesome ~
 			var clientValidationEnabled = html.ViewContext.ClientValidationEnabled;
 			var unobtrusiveJavaScriptEnabled = html.ViewContext.UnobtrusiveJavaScriptEnabled;
 			html.ViewContext.ClientValidationEnabled = false;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
 
-			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
+			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "form-control", @size = 16, @readonly = "readonly"});
 				
 			html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
 
 			if (!readOnly)
 			{
-				wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
+				wrap.InnerHtml += "<span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></span>";
 			}
 				
 			if (attributes.ContainsKey("hints"))

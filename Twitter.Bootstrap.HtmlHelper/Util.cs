@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
 
 namespace Twitter.Bootstrap.HtmlHelpers
 {
@@ -35,6 +38,31 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		internal static string GetString(this IDictionary<string, object> attributes, string key, string defaultValue)
 		{
 			return !attributes.ContainsKey(key) ? defaultValue : attributes[key].ToString();
+		}
+
+		internal static string WriteLabelFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
+			Expression<Func<TModel, TProperty>> expression, 
+			IDictionary<string, object> attributes,
+			bool inline)
+		{
+			var label = attributes.GetString("label", string.Empty);
+
+			var lbl = html.LabelFor(expression, new
+			{
+				@class = inline ? "sr-only" : "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
+			}).ToHtmlString();
+			attributes.Remove("labelcols");
+
+			if (label != string.Empty)
+			{
+				attributes.Remove("label");
+
+				var regEx = new Regex("(<label.+?>)(.+?)</label>");
+				var match = regEx.Match(lbl);
+
+				lbl = string.Format("{0}{1}</label>", match.Groups[1], html.Encode(label));
+			}
+			return lbl;
 		}
 	}
 }

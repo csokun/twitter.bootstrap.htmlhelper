@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -94,43 +93,45 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return MvcHtmlString.Create(placeholder.ToString(TagRenderMode.Normal));
 		}
 
-		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IEnumerable<TbMenuTree> tree)
+		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlContent, IEnumerable<TbMenuTree> tree)
 		{
 			if(tree == null) return;
 
-			foreach (var menuItem in tree)
+			foreach (var item in tree)
 			{
-				if (menuItem == null)
+				if (item == null)
 				{
-					htmlStringBuilder.Append("<li class=\"divider\"></li>");
+					htmlContent.Append("<li class=\"divider\"></li>");
 					continue;
 				}
 
-				if (!menuItem.Visible) continue;
+				if (!item.Visible) continue;
 
-				if (menuItem.Leaf)
+				if (item.Leaf)
 				{
-					htmlStringBuilder.Append( menuItem.Selected ? "<li class=\"active\">" : "<li>" );
-					
-					htmlStringBuilder.Append(
-						html.RouteLink(menuItem.Text, menuItem.Route,
-						               new {action = menuItem.Action, controller = menuItem.Controller}));
+					htmlContent.Append( item.Selected ? "<li class=\"active\">" : "<li>" );
 
-					htmlStringBuilder.Append("</li>");
+					htmlContent.Append(html.RouteLink(
+						item.Text, 
+						item.RouteName,
+						item.RouteValues,
+						item.Attributes));
+
+					htmlContent.Append("</li>");
 
 					continue;
 				}
 
-				htmlStringBuilder.Append("<li class=\"dropdown\">");
-				htmlStringBuilder.AppendFormat(
+				htmlContent.Append("<li class=\"dropdown\">");
+				htmlContent.AppendFormat(
 					"<a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">{0} <b class=\"caret\"></b></a>",
-					html.Encode(menuItem.Text));
-				htmlStringBuilder.Append("<ul class=\"dropdown-menu\">");
+					html.Encode(item.Text));
+				htmlContent.Append("<ul class=\"dropdown-menu\">");
 
-				RenderMenuItem(html, htmlStringBuilder, menuItem.Items);
+				RenderMenuItem(html, htmlContent, item.Items);
 
-				htmlStringBuilder.Append("</ul>");
-				htmlStringBuilder.Append("</li>");
+				htmlContent.Append("</ul>");
+				htmlContent.Append("</li>");
 			}
 		}
 

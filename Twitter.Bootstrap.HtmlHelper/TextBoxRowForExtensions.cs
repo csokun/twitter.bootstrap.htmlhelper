@@ -29,14 +29,11 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			var controlGroup = new TagBuilder("div");
 			controlGroup.AddCssClass("form-group");
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
 
 			// create label
-			// HACKME: this only work for horizontal-form
-			var lbl = html.LabelFor(expression, new
-			{
-				@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
-			}).ToHtmlString();
-			attributes.Remove("labelcols");
+			var lbl = html.WriteLabelFor(expression, attributes, inline);
 
 			// create controls block
 			var ctrl = new TagBuilder("div");
@@ -79,7 +76,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				ctrl.InnerHtml += validation;
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
+			controlGroup.InnerHtml = lbl + (inline ? ctrl.InnerHtml : ctrl.ToString());
 
 			return MvcHtmlString.Create(controlGroup.ToString());
 		}
