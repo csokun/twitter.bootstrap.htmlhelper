@@ -31,11 +31,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			formGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new
-			{
-				@class = "control-label col-lg-" + attributes.Get<int>("labelcols", 2)
-			}).ToHtmlString();
-			attributes.Remove("labelcols");
+			var lbl = html.WriteLabelFor(expression, attributes, false);
 
 			// create controls block
 			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
@@ -77,6 +73,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var wrap = new TagBuilder("div");
 			wrap.AddCssClass("input-group date");
 
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
+			if (inline)
+			{
+				wrap.Attributes.Add("style", "display: inline-table; width: 150px;");
+			}
+			
 			// id
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
@@ -106,8 +109,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			html.ViewContext.ClientValidationEnabled = false;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
 
-			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "form-control", @size = 16, @readonly = "readonly"});
-				
+			// Why don't I hook attributes directly?
+			wrap.InnerHtml += html.TextBox(fullName, value, new { @class = "form-control", @size = 16, @readonly = "readonly" });
+
 			html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
 
