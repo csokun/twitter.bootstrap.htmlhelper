@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -63,6 +64,19 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				lbl = string.Format("{0}{1}</label>", match.Groups[1], html.Encode(label));
 			}
 			return lbl;
+		}
+
+		internal static object ToExpando(this IDictionary<string, object> dictionary)
+		{
+			var eo = new ExpandoObject();
+			var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
+			
+			foreach (var kvp in dictionary)
+			{
+				eoColl.Add(kvp);
+			}
+		
+			return eo;
 		}
 	}
 }
