@@ -1,4 +1,4 @@
-﻿using System;
+﻿	using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web;
@@ -34,7 +34,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var lbl = html.WriteLabelFor(expression, attributes, false);
 
 			// create controls block
-			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
+			var wrap = DatepickerTagBuilder(html, expression, attributes);
 
 			formGroup.InnerHtml = lbl + wrap;
 			
@@ -64,11 +64,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 		}
 
-		private static TagBuilder DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
+		private static string DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
 		                                                                  IDictionary<string, object> attributes)
 		{
 			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			var div1 = new TagBuilder("div");
+			div1.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 4));
+			attributes.Remove("controlcols");
 
 			var wrap = new TagBuilder("div");
 			wrap.AddCssClass("input-group date");
@@ -127,26 +129,36 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			div1.InnerHtml = wrap.ToString() + html.Hidden(fullName + ".DateFormat", dotNetDateFormat);
 
-			return div1;
+			return inline ? div1.InnerHtml : div1.ToString();
 		}
 
 		private static string GetDateValue(ModelMetadata metadata, string dotNetDateFormat)
 		{
-			DateTime date;
+			DateTime? date;
 
 			if (metadata.ModelType.FullName == typeof (DateTime?).FullName)
 			{
+				date = (DateTime?)metadata.Model;
+				/*
 				var nDate = (DateTime?) metadata.Model;
-				date = nDate.HasValue ? nDate.Value : DateTime.Today;
+
+				date = nDate.HasValue ? nDate.Value : nul;
+				 * */
 			}
 			else
 			{
 				date = (DateTime) metadata.Model;
 			}
 
-			var value = (date <= DateTime.MinValue)
-				            ? DateTime.Today.ToString(dotNetDateFormat)
-				            : date.ToString(dotNetDateFormat);
+			var value = string.Empty;
+
+			if (date.HasValue)
+			{
+				value = (date.Value <= DateTime.MinValue)
+										? string.Empty
+										: date.Value.ToString(dotNetDateFormat);
+			}
+				
 			return value;
 		}
 
@@ -170,7 +182,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
-			var tagBuilder = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
+			var tagBuilder = DatepickerTagBuilder(html, expression, attributes);
 
 			if (!showLabel)
 			{

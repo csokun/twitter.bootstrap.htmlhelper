@@ -63,21 +63,25 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			dropdown.Append("<ul class=\"dropdown-menu\" role=\"menu\">");
 			foreach (var item in menuItems)
 			{
+				
 				if (item == null)
 				{
 					dropdown.Append("<li class=\"divider\"></li>");
+					continue;
 				}
-				else
-				{
-					dropdown.Append("<li>");
-					
-					dropdown.Append(html.RouteLink(
-						item.Text, item.RouteName,
-						item.RouteValues,
-						item.Attributes));
 
-					dropdown.Append("</li>");
-				}
+				if (!item.Visible) 
+					continue;
+
+				dropdown.Append("<li>");
+					
+				dropdown.Append(html.RouteLink(
+					item.Text, item.RouteName,
+					item.RouteValues,
+					item.Attributes));
+
+				dropdown.Append("</li>");
+
 			}
 			dropdown.Append("</ul></div>");
 
