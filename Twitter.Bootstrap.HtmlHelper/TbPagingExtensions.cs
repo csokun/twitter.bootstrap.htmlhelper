@@ -27,10 +27,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// 2. value should be store in hidden field (required JavaScript ???)
 			var defaultUrl = RebuildQueryString(html);
 
-			var wrap = new TagBuilder("div");
-			wrap.AddCssClass("pagination");
-
 			var ul = new TagBuilder("ul");
+			ul.AddCssClass("pagination");
 
 			// generate prev
 			ul.InnerHtml += (currentPage - 1 < 1)
@@ -74,8 +72,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 												? @"<li class=""disabled""><span>&raquo;</span></li>"
 												: string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink(defaultUrl, currentPage + 1));
 
-			wrap.InnerHtml = ul.ToString();
-			return MvcHtmlString.Create(wrap.ToString());
+			return MvcHtmlString.Create(ul.ToString());
 		}
 
 		private static void WriteCenterLinks(int startPage, int endPage, int currentPage, TagBuilder ul, string defaultUrl)
