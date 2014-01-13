@@ -45,26 +45,43 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				// split ...
 				const int segment = VisiblePages/2;
 				const int radius = 3;
-				var startOfPart2 = pageCount - segment;
 
+				var startOfPart2 = pageCount - segment;
+				var endOfPart1 = segment;
+				
 				var segment1InRadius = Math.Abs(segment - currentPage) <= radius;
 				var segment2InRadius = Math.Abs(startOfPart2 - currentPage) <= radius;
 
 				// head
-				WritePages(1, segment1InRadius ? segment + 3 : segment, currentPage, ul, defaultUrl);
+				if (segment1InRadius)
+				{
+					endOfPart1 += radius;
+					startOfPart2 += radius;
+				}
+
+				if (segment2InRadius)
+				{
+					startOfPart2 -= radius;
+					endOfPart1 -= radius;
+				}
+
+				WritePages(1, endOfPart1, currentPage, ul, defaultUrl);
 	
 				// body
-				if (segment1InRadius || segment2InRadius)
+				if ((segment1InRadius || segment2InRadius) 
+					|| (pageCount - VisiblePages) <= segment)
 				{
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 				else
 				{
-					WriteCenterLinks(currentPage - 2, currentPage + 2, currentPage, ul, defaultUrl);
+					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+					WritePages(currentPage - 1, currentPage + 1, currentPage, ul, defaultUrl);
+					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 
 				// tail
-				WritePages(segment2InRadius ? startOfPart2 - 3 : startOfPart2, pageCount, currentPage, ul, defaultUrl);
+				WritePages(startOfPart2, pageCount, currentPage, ul, defaultUrl);
 			}
 
 			// generate next
@@ -75,13 +92,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return MvcHtmlString.Create(ul.ToString());
 		}
 
-		private static void WriteCenterLinks(int startPage, int endPage, int currentPage, TagBuilder ul, string defaultUrl)
-		{
-			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-			WritePages(startPage, endPage, currentPage, ul, defaultUrl);
-			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 
-		}
 
 		private static void WritePages(int startPage, int pageCount, int currentPage, TagBuilder ul, string defaultUrl)
 		{
