@@ -102,7 +102,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			Assert.DoesNotContain("<span>...</span>", html);
 		}
 
-		// 1 2 3 4 5 ... 7 8 [9] 10 11 ... 20 21 22 23 24 25
+		// 1 2 3 4 5 ... 8 [9] 10 ... 20 21 22 23 24 25
 		[Fact]
 		public void When_pageCount_larger_than_default_Visible_render_splitter()
 		{
@@ -118,9 +118,23 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			AssertPrevNext(currentPage, pageCount, html);
 
 			// assert center split
-			Assert.Contains(@"<li><a href=""?PageIndex=5"">5</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=7"">7</a></li>", html); // left
+			Assert.Contains(@"5</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=8", html); // left
 			Assert.Contains(@"<li class=""active""><span>9</span></li>", html); // current
-			Assert.Contains(@"<li><a href=""?PageIndex=11"">11</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=20"">20</a></li>", html); // right
+			Assert.Contains(@"10</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=20", html); // right
+		}
+
+		[Fact]
+		public void When_pageCount_larger_than_default_Visible_render_splitter_2()
+		{
+			// arrange
+			var helper = MvcHelper.GetHtmlHelper();
+			var pageCount = 25;
+			var currentPage = 20;
+
+			// act
+			var html = helper.TbPaging(pageCount, currentPage).ToHtmlString();
+
+			Assert.Contains(@"<li class=""active""><span>20</span></li><li><a href=""?PageIndex=21"">21</a></li><li><a href=""?PageIndex=22", html); // current
 		}
 
 		// 1 2 3 4 5 [6] 7 8 ... 20 21 22 23 14 25
@@ -140,6 +154,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 
 			// assert center split
 			Assert.Contains(@"<li class=""active""><span>6</span></li>", html); // current
+			
+			// matching blank dots ...
 			var found = Regex.Matches(html, @"\.{3}").Count;
 			Assert.Equal(1, found);
 		}
@@ -159,7 +175,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 				: @"<li class=""disabled""><span>&raquo;</span></li>", html); // Next
 		}
 
-		// 1 2 3 4 5 ... [17] 18 19 20 21 22 23 14 25
+		// 1 2 3 ... 16 [17] 18 ... 23 14 25
 		[Fact]
 		public void When_currentPage_within_three_page_range_from_tail_add_to_append_and_dot_middle()
 		{
@@ -175,9 +191,10 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			AssertPrevNext(currentPage, pageCount, html);
 
 			// assert center split
-			Assert.Contains(@"<li class=""disabled""><span>...</span></li><li class=""active""><span>17</span></li>", html); // current
+			Assert.Contains(@"<li><a href=""?PageIndex=16"">16</a></li><li class=""active""><span>17</span></li><li><a href=""?PageIndex=18"">18</a></li>", html); // current
+			
 			var found = Regex.Matches(html, @"\.{3}").Count;
-			Assert.Equal(1, found);
+			Assert.Equal(2, found);
 		}
 	}
 }

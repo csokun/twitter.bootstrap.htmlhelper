@@ -27,10 +27,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			// 2. value should be store in hidden field (required JavaScript ???)
 			var defaultUrl = RebuildQueryString(html);
 
-			var wrap = new TagBuilder("div");
-			wrap.AddCssClass("pagination");
-
 			var ul = new TagBuilder("ul");
+			ul.AddCssClass("pagination");
 
 			// generate prev
 			ul.InnerHtml += (currentPage - 1 < 1)
@@ -47,26 +45,43 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				// split ...
 				const int segment = VisiblePages/2;
 				const int radius = 3;
-				var startOfPart2 = pageCount - segment;
 
+				var startOfPart2 = pageCount - segment;
+				var endOfPart1 = segment;
+				
 				var segment1InRadius = Math.Abs(segment - currentPage) <= radius;
 				var segment2InRadius = Math.Abs(startOfPart2 - currentPage) <= radius;
 
 				// head
-				WritePages(1, segment1InRadius ? segment + 3 : segment, currentPage, ul, defaultUrl);
+				if (segment1InRadius)
+				{
+					endOfPart1 += radius;
+					startOfPart2 += radius;
+				}
+
+				if (segment2InRadius)
+				{
+					startOfPart2 -= radius;
+					endOfPart1 -= radius;
+				}
+
+				WritePages(1, endOfPart1, currentPage, ul, defaultUrl);
 	
 				// body
-				if (segment1InRadius || segment2InRadius)
+				if ((segment1InRadius || segment2InRadius) 
+					|| (pageCount - VisiblePages) <= segment)
 				{
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 				else
 				{
-					WriteCenterLinks(currentPage - 2, currentPage + 2, currentPage, ul, defaultUrl);
+					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
+					WritePages(currentPage - 1, currentPage + 1, currentPage, ul, defaultUrl);
+					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 
 				// tail
-				WritePages(segment2InRadius ? startOfPart2 - 3 : startOfPart2, pageCount, currentPage, ul, defaultUrl);
+				WritePages(startOfPart2, pageCount, currentPage, ul, defaultUrl);
 			}
 
 			// generate next
@@ -74,17 +89,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 												? @"<li class=""disabled""><span>&raquo;</span></li>"
 												: string.Format(@"<li><a href=""{0}"">&raquo;</a></li>", PageLink(defaultUrl, currentPage + 1));
 
-			wrap.InnerHtml = ul.ToString();
-			return MvcHtmlString.Create(wrap.ToString());
+			return MvcHtmlString.Create(ul.ToString());
 		}
 
-		private static void WriteCenterLinks(int startPage, int endPage, int currentPage, TagBuilder ul, string defaultUrl)
-		{
-			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-			WritePages(startPage, endPage, currentPage, ul, defaultUrl);
-			ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 
-		}
 
 		private static void WritePages(int startPage, int pageCount, int currentPage, TagBuilder ul, string defaultUrl)
 		{

@@ -25,7 +25,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 					Collapsible = true
 				};
 			var collapsible = @"
-						<button type=""button"" class=""btn btn-navbar"" data-toggle=""collapse"" data-target="".nav-collapse"">
+						<button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target=""navbar-ex1-collapse"">
+							<span class=""sr-only"">Toggle navigation</span>
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
@@ -34,9 +35,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
-			Assert.Contains("<div class=\"navbar navbar-inverse\">", html);
-			Assert.Contains("<div class=\"navbar-inner\">", html);
-			Assert.Contains(string.Format("<a class=\"brand\" href=\"#\">{0}</a>", navBar.Brand), html);
+			Assert.Contains("navbar-inverse navbar", html);
+			Assert.Contains(string.Format("<a class=\"navbar-brand\" href=\"/\">{0}</a>", navBar.Brand), html);
 			Assert.Contains(collapsible, html);
 		}
 
@@ -76,7 +76,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 							new TbMenuTree()
 								{
 									Text = "About", 
-									Action = "About", 
+									RouteValues = new { @action = "About", @controller = "Home" }, 
 									Selected = true,
 									Items = new List<TbMenuTree>()
 								}
@@ -103,7 +103,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 							new TbMenuTree()
 								{
 									Text = "About", 
-									Action = "About", 
+									RouteValues = new { @action = "About" , @controller = "Home"}, 
 									Selected = true,
 									Items = new List<TbMenuTree>()
 										{
@@ -133,7 +133,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
-			Assert.Contains("navbar navbar-fixed-top", html);
+			Assert.Contains("navbar-fixed-top navbar navbar-default", html);
 		}
 
 		[Fact]
@@ -147,7 +147,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
-			Assert.Contains("navbar navbar-inverse navbar-fixed-top", html);
+			Assert.Contains("navbar-inverse navbar-fixed-top navbar", html);
 		}
 
 		[Fact]

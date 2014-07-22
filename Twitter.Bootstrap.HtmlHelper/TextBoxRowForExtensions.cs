@@ -28,15 +28,18 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
 			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			controlGroup.AddCssClass("form-group");
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
 
 			// create label
-			var lbl = html.LabelFor(expression, new {@class = "control-label"}).ToHtmlString();
-	
+			var lbl = html.WriteLabelFor(expression, attributes, inline);
+
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
-			
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 10));
+			attributes.Remove("controlcols");
+
 			// actual controls
 			var hasIconAttached = attributes.ContainsKey("prepend") || attributes.ContainsKey("append");
 
@@ -44,16 +47,18 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			if (attributes.ContainsKey("prepend"))
 			{
-				wrap.AddCssClass("input-prepend");
-				wrap.InnerHtml = string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["prepend"]));
-			} 
-			
+				wrap.AddCssClass("input-group");
+				wrap.InnerHtml = string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["prepend"]));
+			}
+
+			attributes.Ensure("class", "form-control");
+
 			wrap.InnerHtml += html.TextBoxFor(expression, attributes);
 
 			if (attributes.ContainsKey("append"))
 			{
-				wrap.AddCssClass("input-append");
-				wrap.InnerHtml += string.Format("<span class=\"add-on\"><i class=\"{0}\"></i></span>", html.AttributeEncode(attributes["append"]));
+				wrap.AddCssClass("input-group");
+				wrap.InnerHtml += string.Format("<span class=\"input-group-addon\">{0}</span>", html.AttributeEncode(attributes["append"]));
 			}
 
 			if (attributes.ContainsKey("hints"))
@@ -69,10 +74,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (!string.IsNullOrWhiteSpace(validation))
 			{
 				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
+			controlGroup.InnerHtml = lbl + (inline ? ctrl.InnerHtml : ctrl.ToString());
 
 			return MvcHtmlString.Create(controlGroup.ToString());
 		}

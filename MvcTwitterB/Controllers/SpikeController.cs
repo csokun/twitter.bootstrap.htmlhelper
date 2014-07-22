@@ -24,5 +24,10 @@ namespace MvcTwitterB.Controllers
 
 				return View(model);
 			}
+
+			public ActionResult Modal()
+			{
+				return View();
+			}
     }
 }

@@ -1,4 +1,6 @@
-﻿@using Twitter.Bootstrap.HtmlHelpers
+﻿@using System.Web.Configuration
+@using Twitter.Bootstrap.HtmlHelpers
+@using Twitter.Bootstrap.HtmlHelpers.ViewModels
 @model MvcTwitterB.Models.PagedResult
 @{
     Layout = null;
@@ -13,6 +15,18 @@
 </head>
 <body>
 	<div>
+		@Html.ButtonDropdowns("Test", new List<TbMenuItem>()
+			{
+				new TbMenuItem() { Text = "testing", RouteValues = new {@controller = "Test", @action="Index"}, Attributes = new {@data_target="modal"}},
+				null
+			}, new {@downgrade = true})
+		
+		@Html.ButtonDropdowns("Test", new List<TbMenuItem>()
+			{
+				new TbMenuItem() { Text = "testing", RouteValues = new {@controller = "Test", @action="Index"}, Attributes = new {@data_target="modal"}},
+				null
+			})
+		@Html.TextBoxRowFor(m=>m.PageCount)
 		@Html.TbPaging(Model.PageCount, int.Parse("0" + Request["PageIndex"]))
 	</div>
 </body>

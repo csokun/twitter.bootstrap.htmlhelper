@@ -35,11 +35,10 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.TbCheckboxListRowFor(m => m.Occupations, false).ToHtmlString();
 
 			// assert
-			Assert.Contains(@"<div class=""control-group"">", html);
-			Assert.Contains(@"<label class=""control-label"">Occupations</label>", html);
-
+			Assert.Contains(@"<div class=""form-group"">", html);
 			Assert.Contains("Occupations[0].Value", html);
 			Assert.Contains(@"name=""Occupations[0].Value"" value=""1""", html);
+			Assert.Contains("col-lg-offset-2 col-lg-10", html);
 		}
 
 		[Fact]
@@ -49,17 +48,19 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var html = helper.TbCheckboxListRowFor(m => m.Favorites, false).ToHtmlString();
 
 			// assert
-			Assert.Contains(@"<label class=""control-label"">My Favorites</label>", html);
+			Assert.Contains(@"<label class=""col-lg-2 control-label"">My Favorites</label>", html);
 		}
 
 		[Fact]
 		public void CheckboxListFor_support_inline_item_generation()
 		{
 			// act
-			var html = helper.TbCheckboxListRowFor(m => m.Occupations, true).ToHtmlString();
+			var html = helper.TbCheckboxListRowFor(m => m.Occupations, new {@inline = true}).ToHtmlString();
 
 			// assert
-			Assert.Contains(@"<label class=""checkbox inline"">", html);
+			Assert.Contains(@"<div class=""form-group"">", html);
+			Assert.DoesNotContain(@"<div class=""checkbox"">", html);
+			Assert.Contains(@"<label class=""checkbox-inline"">", html);
 		}
 	}
 }

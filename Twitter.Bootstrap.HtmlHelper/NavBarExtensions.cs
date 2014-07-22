@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -11,19 +10,29 @@ namespace Twitter.Bootstrap.HtmlHelpers
 {
 	public static class NavBarExtensions
 	{
-		public static IHtmlString NavBar(this HtmlHelper html, NavBar navBar, object htmlAttributes)
+		public static IHtmlString NavBar(this HtmlHelper html, NavBar navBar, object htmlAttributes = null)
 		{
 			// detect current url
-
+			const string defaultNavCollapseTarget = ".navbar-ex1-collapse";
 			const string collapsible = @"
-						<button type=""button"" class=""btn btn-navbar"" data-toggle=""collapse"" data-target="".nav-collapse"">
+						<button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target="".navbar-ex1-collapse"">
+							<span class=""sr-only"">Toggle navigation</span>
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
 						</button>";
+			
+			var attributes = htmlAttributes as IDictionary<string, object> ??
+								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			
+			var dataTarget = attributes.ContainsKey("data-target") ? html.AttributeEncode((string)attributes["data-target"]) : "ex1";
+			dataTarget = string.Format("navbar-{0}-collapse", dataTarget);
+
 			// lv1
 			var placeholder = new TagBuilder("div");
-
+			placeholder.AddCssClass("navbar navbar-default");
+			placeholder.Attributes.Add(new KeyValuePair<string, string>("role", "navigation"));
+			
 			if (navBar.Fixed != NavBarDock.None)
 			{
 				var name = Enum.GetName(typeof (NavBarDock), navBar.Fixed);
@@ -34,91 +43,95 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (navBar.Inverse)
 				placeholder.AddCssClass("navbar-inverse");
 
-			placeholder.AddCssClass("navbar");
+			// brand
 
-			// lv2
-			var innerNavBar = new TagBuilder("div");
-			innerNavBar.AddCssClass("navbar-inner");
-
-			var container = new TagBuilder("div");
-			container.AddCssClass("container");
+			var header = new TagBuilder("div");
+			header.AddCssClass("navbar-header");
 
 			// brand insertion
+			var brand = new TagBuilder("a");
 			if (!string.IsNullOrEmpty(navBar.Brand))
 			{
-				var brand = new TagBuilder("a");
-				brand.Attributes["href"] = "#";
-				brand.AddCssClass("brand");
+				brand.Attributes["href"] = "/";
+				brand.AddCssClass("navbar-brand");
 				brand.SetInnerText(navBar.Brand);
-
-				container.InnerHtml += brand.ToString();
 			}
 
-			var htmlString = new StringBuilder();
-			
-			htmlString.Append("<ul class=\"nav\">");
-			RenderMenuItem(html, htmlString, navBar.Items);
-			htmlString.Append("</ul>");
-
-
+			var innerNavBar = new TagBuilder("div");
+			innerNavBar.AddCssClass("collapse navbar-collapse");
 			if (navBar.Collapsible)
 			{
-				var divCollapse = new TagBuilder("div");
-				divCollapse.AddCssClass("nav-collapse collapse navbar-responsive-collapse");
+				header.InnerHtml = collapsible.Replace(defaultNavCollapseTarget, dataTarget);
+				header.InnerHtml += brand;
 
-				divCollapse.InnerHtml += htmlString;
-
-				container.InnerHtml += collapsible;
-				container.InnerHtml += MvcHtmlString.Create(divCollapse.ToString());
+				innerNavBar.AddCssClass(dataTarget);
 			}
 			else
 			{
-				container.InnerHtml += htmlString;
+				header.InnerHtml = brand.ToString();
 			}
 
-			innerNavBar.InnerHtml = container.ToString();		
-			placeholder.InnerHtml = innerNavBar.ToString();
+			// content
+			var elements = new StringBuilder();
+			
+			elements.Append("<ul class=\"nav navbar-nav\">");
+			RenderMenuItem(html, elements, navBar.Items);
+			elements.Append("</ul>");
+
+			innerNavBar.InnerHtml = elements.ToString();
+
+			if (attributes.ContainsKey("wrap") && attributes["wrap"].Equals("false"))
+			{
+				placeholder.InnerHtml = header + innerNavBar.ToString();
+			}
+			else
+			{
+				placeholder.InnerHtml = "<div class=\"container\">" + header + innerNavBar + "</div>"; 
+			}
+			
 
 			return MvcHtmlString.Create(placeholder.ToString(TagRenderMode.Normal));
 		}
 
-		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlStringBuilder, IEnumerable<TbMenuTree> tree)
+		private static void RenderMenuItem(HtmlHelper html, StringBuilder htmlContent, IEnumerable<TbMenuTree> tree)
 		{
 			if(tree == null) return;
 
-			foreach (var menuItem in tree)
+			foreach (var item in tree)
 			{
-				if (menuItem == null)
+				if (item == null)
 				{
-					htmlStringBuilder.Append("<li class=\"divider\"></li>");
+					htmlContent.Append("<li class=\"divider\"></li>");
 					continue;
 				}
 
-				if (!menuItem.Visible) continue;
+				if (!item.Visible) continue;
 
-				if (menuItem.Leaf)
+				if (item.Leaf)
 				{
-					htmlStringBuilder.Append( menuItem.Selected ? "<li class=\"active\">" : "<li>" );
-					
-					htmlStringBuilder.Append(
-						html.RouteLink(menuItem.Text, menuItem.Route,
-						               new {action = menuItem.Action, controller = menuItem.Controller}));
+					htmlContent.Append( item.Selected ? "<li class=\"active\">" : "<li>" );
 
-					htmlStringBuilder.Append("</li>");
+					htmlContent.Append(html.RouteLink(
+						item.Text, 
+						item.RouteName,
+						item.RouteValues,
+						item.Attributes));
+
+					htmlContent.Append("</li>");
 
 					continue;
 				}
 
-				htmlStringBuilder.Append("<li class=\"dropdown\">");
-				htmlStringBuilder.AppendFormat(
+				htmlContent.Append("<li class=\"dropdown\">");
+				htmlContent.AppendFormat(
 					"<a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">{0} <b class=\"caret\"></b></a>",
-					html.Encode(menuItem.Text));
-				htmlStringBuilder.Append("<ul class=\"dropdown-menu\">");
+					html.Encode(item.Text));
+				htmlContent.Append("<ul class=\"dropdown-menu\">");
 
-				RenderMenuItem(html, htmlStringBuilder, menuItem.Items);
+				RenderMenuItem(html, htmlContent, item.Items);
 
-				htmlStringBuilder.Append("</ul>");
-				htmlStringBuilder.Append("</li>");
+				htmlContent.Append("</ul>");
+				htmlContent.Append("</li>");
 			}
 		}
 

@@ -69,5 +69,15 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// assert
 			Assert.Contains("<span class=\"help-block\">This is first name.</span>", html);
 		}
+
+		[Fact]
+		public void DropDownListRowFor_should_render_prefer_label()
+		{
+			// act
+			var html = _helper.DropDownListRowFor(t => t.OccupationId, _selectList, new {@gridcol = 3, label = "Testing" }).ToHtmlString();
+
+			// assert
+			Assert.Contains(">Testing</label>", html);
+		}
 	}
 }

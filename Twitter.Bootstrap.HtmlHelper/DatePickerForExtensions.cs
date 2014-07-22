@@ -1,4 +1,4 @@
-﻿using System;
+﻿	using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web;
@@ -27,32 +27,26 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
 
-			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			var formGroup = new TagBuilder("div");
+			formGroup.AddCssClass("form-group");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "control-label" }).ToHtmlString();
+			var lbl = html.WriteLabelFor(expression, attributes, false);
 
 			// create controls block
-			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
+			var wrap = DatepickerTagBuilder(html, expression, attributes);
 
-			var wrap = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
-
-			ctrl.InnerHtml = wrap;
-
+			formGroup.InnerHtml = lbl + wrap;
+			
 			// validation if required
 			var validation = string.Format("{0}", html.ValidationMessageFor(expression, null, new { @class = "help-inline" }));
 
 			if (!attributes.ContainsKey("readonly") && !string.IsNullOrWhiteSpace(validation))
 			{
-				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
+				formGroup.InnerHtml += validation;
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
-
-			return MvcHtmlString.Create(controlGroup.ToString());
+			return MvcHtmlString.Create(formGroup.ToString());
 		}
 
 		private static void VerifyExpression<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression)
@@ -70,14 +64,24 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 		}
 
-		private static TagBuilder DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
+		private static string DatepickerTagBuilder<TModel, TProperty>(HtmlHelper<TModel> html, Expression<Func<TModel, TProperty>> expression,
 		                                                                  IDictionary<string, object> attributes)
 		{
 			var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
 			var div1 = new TagBuilder("div");
-			var wrap = new TagBuilder("div");
-			wrap.AddCssClass("input-append date");
+			div1.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 4));
+			attributes.Remove("controlcols");
 
+			var wrap = new TagBuilder("div");
+			wrap.AddCssClass("input-group date");
+
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
+			if (inline)
+			{
+				wrap.Attributes.Add("style", "display: inline-table; width: 150px;");
+			}
+			
 			// id
 			var name = ExpressionHelper.GetExpressionText(expression);
 			string fullName = html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
@@ -100,20 +104,22 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				                    : value);
 
 			var readOnly = attributes.ContainsKey("readonly");
-			// date validation @ client-side is troublesome~
+
+			// Date validation @ client-side is troublesome ~
 			var clientValidationEnabled = html.ViewContext.ClientValidationEnabled;
 			var unobtrusiveJavaScriptEnabled = html.ViewContext.UnobtrusiveJavaScriptEnabled;
 			html.ViewContext.ClientValidationEnabled = false;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = false;
 
-			wrap.InnerHtml += html.TextBox(fullName, value, new {@class = "input-small", @size = 16, @readonly = "readonly"});
-				
+			// Why don't I hook attributes directly?
+			wrap.InnerHtml += html.TextBox(fullName, value, new { @class = "form-control", @size = 16, @readonly = "readonly" });
+
 			html.ViewContext.ClientValidationEnabled = clientValidationEnabled;
 			html.ViewContext.UnobtrusiveJavaScriptEnabled = unobtrusiveJavaScriptEnabled;
 
 			if (!readOnly)
 			{
-				wrap.InnerHtml += "<span class=\"add-on\"><i class=\"icon-calendar\"></i></span>";
+				wrap.InnerHtml += "<span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></span>";
 			}
 				
 			if (attributes.ContainsKey("hints"))
@@ -123,26 +129,36 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 			div1.InnerHtml = wrap.ToString() + html.Hidden(fullName + ".DateFormat", dotNetDateFormat);
 
-			return div1;
+			return inline ? div1.InnerHtml : div1.ToString();
 		}
 
 		private static string GetDateValue(ModelMetadata metadata, string dotNetDateFormat)
 		{
-			DateTime date;
+			DateTime? date;
 
 			if (metadata.ModelType.FullName == typeof (DateTime?).FullName)
 			{
+				date = (DateTime?)metadata.Model;
+				/*
 				var nDate = (DateTime?) metadata.Model;
-				date = nDate.HasValue ? nDate.Value : DateTime.Today;
+
+				date = nDate.HasValue ? nDate.Value : nul;
+				 * */
 			}
 			else
 			{
 				date = (DateTime) metadata.Model;
 			}
 
-			var value = (date <= DateTime.MinValue)
-				            ? DateTime.Today.ToString(dotNetDateFormat)
-				            : date.ToString(dotNetDateFormat);
+			var value = string.Empty;
+
+			if (date.HasValue)
+			{
+				value = (date.Value <= DateTime.MinValue)
+										? string.Empty
+										: date.Value.ToString(dotNetDateFormat);
+			}
+				
 			return value;
 		}
 
@@ -166,7 +182,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
-			var tagBuilder = DatepickerTagBuilder(html, expression, attributes).InnerHtml;
+			var tagBuilder = DatepickerTagBuilder(html, expression, attributes);
 
 			if (!showLabel)
 			{

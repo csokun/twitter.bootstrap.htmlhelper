@@ -6,30 +6,33 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 {
 	public class TbCheckboxForExtensionsTest
 	{
-	
+		private Person _person;
+		private ViewDataDictionary<Person> _viewData;
+
+		public TbCheckboxForExtensionsTest()
+		{
+			_person = new Person()
+			{
+				IsActive = true
+			};
+			_viewData = new ViewDataDictionary<Person>()
+			{
+				Model = _person
+			};
+		}
+
 		[Fact]
 		public void Should_generate_checkbox_inside_div_controls()
 		{
 			// arrange
-			var person = new Person()
-			{
-				IsActive = true
-			};
-
-			var viewData = new ViewDataDictionary<Person>()
-			{
-				Model = person
-			};
-
-			var helper = MvcHelper.GetHtmlHelper(viewData);
-			var expected = @"<div class=""control-group""><div class=""controls""><label class=""checkbox"" for=""IsActive""><input checked=""checked"" id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" /><input name=""IsActive"" type=""hidden"" value=""false"" />&nbsp;IsActive</label></div></div>";
+			var helper = MvcHelper.GetHtmlHelper(_viewData);
 
 			// act
 			var html = helper.TbCheckboxFor(m => m.IsActive).ToHtmlString();
 
 			// assert
-			Assert.Equal(expected, html);
+			Assert.Contains(@"<div class=""checkbox"">", html);
+			Assert.Contains(@"Active</label>", html);
 		}
-
 	}
 }

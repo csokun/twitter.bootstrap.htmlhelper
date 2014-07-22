@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -11,16 +12,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html,
 		                                                                Expression<Func<TModel, TProperty>> expression,
-		                                                                IEnumerable<SelectListItem> selectList)
-		{
-			return DropDownListRowFor(html, expression, selectList, null);
-		}
-
-
-		public static IHtmlString DropDownListRowFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
-			Expression<Func<TModel, TProperty>> expression,
-			IEnumerable<SelectListItem> selectList, 
-			object htmlAttributes)
+		                                                                IEnumerable<SelectListItem> selectList,
+		                                                                object htmlAttributes = null)
 		{
 			if (expression == null)
 			{
@@ -28,20 +21,28 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 
 			var attributes = htmlAttributes as IDictionary<string, object> ??
-				HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+			                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
 			var controlGroup = new TagBuilder("div");
-			controlGroup.AddCssClass("control-group");
+			controlGroup.AddCssClass("form-group");
+
+			var inline = attributes.Get<bool>("inline", false);
+			attributes.Remove("inline");
 
 			// create label
-			var lbl = html.LabelFor(expression, new { @class = "control-label" }).ToHtmlString();
+			var lbl = html.WriteLabelFor(expression, attributes, inline);
 
 			// create controls block
 			var ctrl = new TagBuilder("div");
-			ctrl.AddCssClass("controls");
+
+			ctrl.AddCssClass("col-lg-" + attributes.Get<int>("controlcols", 10));
+			attributes.Remove("controlcols");
 
 			// actual controls
+			attributes.Ensure("class", "form-control");
+
 			var input = html.DropDownListFor(expression, selectList, attributes);
+
 			ctrl.InnerHtml = input.ToHtmlString();
 			if (attributes.ContainsKey("hints"))
 			{
@@ -53,10 +54,9 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			if (!string.IsNullOrWhiteSpace(validation))
 			{
 				ctrl.InnerHtml += validation;
-				//controlGroup.AddCssClass("error");
 			}
 
-			controlGroup.InnerHtml = lbl + ctrl;
+			controlGroup.InnerHtml = lbl + (inline ? ctrl.InnerHtml : ctrl.ToString());
 
 			return MvcHtmlString.Create(controlGroup.ToString());
 		}

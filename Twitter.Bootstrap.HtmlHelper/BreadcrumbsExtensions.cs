@@ -13,7 +13,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		{
 			var htmlString = new StringBuilder();
 
-			htmlString.Append("<ul class=\"breadcrumb\">\r\n");
+			htmlString.Append("<ol class=\"breadcrumb\">\r\n");
 			var totalItem = menuItems.Count;
 			for (var i = 0; i < totalItem; i++)
 			{
@@ -26,10 +26,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				}
 
 				htmlString.AppendFormat("<li>{0} <span class=\"divider\">/</span></li>\r\n",
-					htmlHelper.RouteLink(menu.Text, menu.Route, new { controller = menu.Controller, action = menu.Action }));
+					htmlHelper.RouteLink(menu.Text, menu.RouteName, menu.RouteValues, menu.Attributes));
 			}
 
-				htmlString.Append("</ul>");
+				htmlString.Append("</ol>");
 
 			return MvcHtmlString.Create(htmlString.ToString());
 		}
