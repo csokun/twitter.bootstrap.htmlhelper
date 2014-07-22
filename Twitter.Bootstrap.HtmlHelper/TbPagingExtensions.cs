@@ -67,7 +67,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 
 				WritePages(1, endOfPart1, currentPage, ul, defaultUrl);
 	
-				// body
+				// body -
 				if ((segment1InRadius || segment2InRadius) 
 					|| (pageCount - VisiblePages) <= segment)
 				{
@@ -75,8 +75,10 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				}
 				else
 				{
+				    var middle = (int)pageCount/2;
+
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
-					WritePages(currentPage - 1, currentPage + 1, currentPage, ul, defaultUrl);
+					WritePages(middle - 1, middle + 1, currentPage, ul, defaultUrl);
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 

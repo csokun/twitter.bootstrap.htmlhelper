@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 using System.Text.RegularExpressions;
 
 namespace Twitter.Bootstrap.HtmlHelpers.Test
@@ -120,6 +121,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// assert center split
 			Assert.Contains(@"5</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=8", html); // left
 			Assert.Contains(@"<li class=""active""><span>9</span></li>", html); // current
+            Assert.Equal(html.IndexOf(@"<span>1</span>", System.StringComparison.CurrentCulture), 
+                html.LastIndexOf(@"<span>1</span>", System.StringComparison.CurrentCulture));
 			Assert.Contains(@"10</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=20", html); // right
 		}
 
@@ -182,7 +185,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			// arrange
 			var helper = MvcHelper.GetHtmlHelper();
 			var pageCount = 25;
-			var currentPage = 17;
+			var currentPage = 1;
 
 			// act
 			var html = helper.TbPaging(pageCount, currentPage).ToHtmlString();
@@ -191,10 +194,30 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			AssertPrevNext(currentPage, pageCount, html);
 
 			// assert center split
-			Assert.Contains(@"<li><a href=""?PageIndex=16"">16</a></li><li class=""active""><span>17</span></li><li><a href=""?PageIndex=18"">18</a></li>", html); // current
+			//Assert.Contains(@"<li><a href=""?PageIndex=16"">16</a></li><li class=""active""><span>17</span></li><li><a href=""?PageIndex=18"">18</a></li>", html); // current
 			
 			var found = Regex.Matches(html, @"\.{3}").Count;
 			Assert.Equal(2, found);
+		}
+
+		[Fact]
+		public void When_current_page_is_zero_middle_segment_incorrectly_render()
+		{
+			// arrange
+			var helper = MvcHelper.GetHtmlHelper();
+			var pageCount = 25;
+			var currentPage = 1;
+
+			// act
+			var html = helper.TbPaging(pageCount, currentPage).ToHtmlString();
+
+			// assert
+			AssertPrevNext(currentPage, pageCount, html);
+
+			//
+            Assert.Equal(html.IndexOf(@"<span>1</span>", StringComparison.CurrentCulture),
+                html.LastIndexOf(@"<span>1</span>", StringComparison.CurrentCulture));
+			
 		}
 	}
 }
