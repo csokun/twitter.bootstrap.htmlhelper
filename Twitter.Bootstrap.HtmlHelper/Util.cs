@@ -10,6 +10,12 @@ namespace Twitter.Bootstrap.HtmlHelpers
 {
 	internal static class Util
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="attributes"></param>
+		/// <param name="key"></param>
+		/// <param name="haystack"></param>
 		internal static void Ensure( this IDictionary<string, object> attributes, string key, string haystack)
 		{
 			var hasKey = attributes.ContainsKey(key);
@@ -24,6 +30,14 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			}
 		}
 
+		/// <summary>
+		/// Get T value from a known key 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="attributes"></param>
+		/// <param name="key"></param>
+		/// <param name="defaultValue"></param>
+		/// <returns></returns>
 		internal static T Get<T>(this IDictionary<string, object> attributes, string key, T defaultValue) where T : struct
 		{
 			if (!attributes.ContainsKey(key)) return defaultValue;
@@ -36,11 +50,28 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			return (T) attributes[key];
 		}
 
+		/// <summary>
+		/// Get string with default value
+		/// </summary>
+		/// <param name="attributes"></param>
+		/// <param name="key"></param>
+		/// <param name="defaultValue"></param>
+		/// <returns></returns>
 		internal static string GetString(this IDictionary<string, object> attributes, string key, string defaultValue)
 		{
 			return !attributes.ContainsKey(key) ? defaultValue : attributes[key].ToString();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TModel"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="html"></param>
+		/// <param name="expression"></param>
+		/// <param name="attributes"></param>
+		/// <param name="inline"></param>
+		/// <returns></returns>
 		internal static string WriteLabelFor<TModel, TProperty>(this HtmlHelper<TModel> html, 
 			Expression<Func<TModel, TProperty>> expression, 
 			IDictionary<string, object> attributes,

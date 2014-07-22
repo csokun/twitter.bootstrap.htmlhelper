@@ -14,7 +14,7 @@ namespace MvcTwitterB.Controllers
 
         public ActionResult Index()
         {
-            return View(new PagedResult() { PageCount =  3, PageIndex = 1});
+            return View(new PagedResult() { PageCount =  35, PageIndex = 1});
         }
 
 			public ActionResult Date()
