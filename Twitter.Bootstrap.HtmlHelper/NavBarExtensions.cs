@@ -13,9 +13,8 @@ namespace Twitter.Bootstrap.HtmlHelpers
 		public static IHtmlString NavBar(this HtmlHelper html, NavBar navBar, object htmlAttributes = null)
 		{
 			// detect current url
-			const string defaultNavCollapseTarget = ".navbar-ex1-collapse";
 			const string collapsible = @"
-						<button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target="".navbar-ex1-collapse"">
+						<button type=""button"" class=""navbar-toggle collapsed"" data-toggle=""collapse"" data-target=""#{0}"">
 							<span class=""sr-only"">Toggle navigation</span>
 							<span class=""icon-bar""></span>
 							<span class=""icon-bar""></span>
@@ -24,14 +23,13 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-			
-			var dataTarget = attributes.ContainsKey("data-target") ? html.AttributeEncode((string)attributes["data-target"]) : "ex1";
-			dataTarget = string.Format("navbar-{0}-collapse", dataTarget);
 
-			// lv1
+            var collapsibleTarget = attributes.ContainsKey("data-collapsible-target") ?
+                html.AttributeEncode((string)attributes["data-collapsible-target"]) : "bs-navbar-collapse";
+
+            // lv1
 			var placeholder = new TagBuilder("div");
 			placeholder.AddCssClass("navbar navbar-default");
-			placeholder.Attributes.Add(new KeyValuePair<string, string>("role", "navigation"));
 			
 			if (navBar.Fixed != NavBarDock.None)
 			{
@@ -57,19 +55,21 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				brand.SetInnerText(navBar.Brand);
 			}
 
-			var innerNavBar = new TagBuilder("div");
-			innerNavBar.AddCssClass("collapse navbar-collapse");
+			var innerNavBar = new TagBuilder("nav");
+            innerNavBar.Attributes.Add("role", "navigation");
+
 			if (navBar.Collapsible)
 			{
-				header.InnerHtml = collapsible.Replace(defaultNavCollapseTarget, dataTarget);
+			    header.InnerHtml = string.Format(collapsible, collapsibleTarget);
 				header.InnerHtml += brand;
 
-				innerNavBar.AddCssClass(dataTarget);
+                innerNavBar.GenerateId(collapsibleTarget);
 			}
 			else
 			{
 				header.InnerHtml = brand.ToString();
 			}
+            innerNavBar.AddCssClass("navbar-collapse collapse");
 
 			// content
 			var elements = new StringBuilder();
