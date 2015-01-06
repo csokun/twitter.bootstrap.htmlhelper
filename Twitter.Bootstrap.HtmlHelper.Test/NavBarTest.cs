@@ -24,13 +24,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 					Inverse = true,
 					Collapsible = true
 				};
-			var collapsible = @"
-						<button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target=""navbar-ex1-collapse"">
-							<span class=""sr-only"">Toggle navigation</span>
-							<span class=""icon-bar""></span>
-							<span class=""icon-bar""></span>
-							<span class=""icon-bar""></span>
-						</button>";
+
+			var collapsible = "<button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-navbar-collapse\">";
 			// act
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
@@ -38,6 +33,25 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			Assert.Contains("navbar-inverse navbar", html);
 			Assert.Contains(string.Format("<a class=\"navbar-brand\" href=\"/\">{0}</a>", navBar.Brand), html);
 			Assert.Contains(collapsible, html);
+		}
+
+		[Fact]
+		public void NavBar_support_Html_for_brand()
+		{
+			// arrange
+			var htmlTag = "<img src=\"/test.png\">";
+			var navBar = new NavBar()
+			{
+				Brand = htmlTag,
+				Inverse = true,
+				Collapsible = true
+			};
+
+			// act
+			var html = helper.NavBar(navBar, null).ToHtmlString();
+
+			// assert
+			Assert.Contains(htmlTag, html);
 		}
 
 		[Fact]

@@ -23,7 +23,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			
 			var attributes = htmlAttributes as IDictionary<string, object> ??
 								 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-
+			
             var collapsibleTarget = attributes.ContainsKey("data-collapsible-target") ?
                 html.AttributeEncode((string)attributes["data-collapsible-target"]) : "bs-navbar-collapse";
 
@@ -52,7 +52,7 @@ namespace Twitter.Bootstrap.HtmlHelpers
 			{
 				brand.Attributes["href"] = "/";
 				brand.AddCssClass("navbar-brand");
-				brand.SetInnerText(navBar.Brand);
+				brand.InnerHtml = navBar.Brand;
 			}
 
 			var innerNavBar = new TagBuilder("nav");
