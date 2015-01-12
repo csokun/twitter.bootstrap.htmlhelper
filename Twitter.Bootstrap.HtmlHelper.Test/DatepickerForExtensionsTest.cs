@@ -43,9 +43,9 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void Should_generate_necessary_minimal_dom_el()
 		{
 			// arrange
-			const string expectWrapper = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker"">";
-			const string expectInput = @"<input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" />";
-			const string expectIcon = @"<span class=""add-on""><i class=""icon-calendar""></i></span>";
+			const string expectWrapper = @"<div class=""input-group date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker"">";
+			const string expectInput = @"<input class=""form-control"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" />";
+			const string expectIcon = @"<span class=""input-group-addon""><i class=""glyphicon glyphicon-calendar""></i></span>";
 
 			// act
 			var html = helper.DatepickerRowFor(p => p.Birthdate).ToHtmlString();
@@ -73,8 +73,9 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void DatepickerFor_Should_generate_Datepicker_without_div_container()
 		{
 			// arrange
-			const string expected = @"<label for=""Birthdate"">Birthdate</label><div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" />";
-
+			const string expected =
+				"<label for=\"Birthdate\">Birthdate</label><div class=\"col-lg-4\"><div class=\"input-group date\" data-date=\"2013-03-30\" data-date-format=\"yyyy-mm-dd\" id=\"Birthdate_datepicker\"><input class=\"form-control\" id=\"Birthdate\" name=\"Birthdate\" readonly=\"readonly\" size=\"16\" type=\"text\" value=\"2013-03-30\" /><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></span></div><input id=\"Birthdate_DateFormat\" name=\"Birthdate.DateFormat\" type=\"hidden\" value=\"yyyy-MM-dd\" /></div>";
+			
 			// act
 			var html = helper.DatepickerFor(p => p.Birthdate);
 
@@ -86,7 +87,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 		public void DatepickerFor_Should_genernate_Datepicker_without_label_el()
 		{
 			// arrange
-			const string expected = @"<div class=""input-append date"" data-date=""2013-03-30"" data-date-format=""yyyy-mm-dd"" id=""Birthdate_datepicker""><input class=""input-small"" id=""Birthdate"" name=""Birthdate"" readonly=""readonly"" size=""16"" type=""text"" value=""2013-03-30"" /><span class=""add-on""><i class=""icon-calendar""></i></span></div><input id=""Birthdate_DateFormat"" name=""Birthdate.DateFormat"" type=""hidden"" value=""yyyy-MM-dd"" />";
+			const string expected =
+				"<div class=\"col-lg-4\"><div class=\"input-group date\" data-date=\"2013-03-30\" data-date-format=\"yyyy-mm-dd\" id=\"Birthdate_datepicker\"><input class=\"form-control\" id=\"Birthdate\" name=\"Birthdate\" readonly=\"readonly\" size=\"16\" type=\"text\" value=\"2013-03-30\" /><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-calendar\"></i></span></div><input id=\"Birthdate_DateFormat\" name=\"Birthdate.DateFormat\" type=\"hidden\" value=\"yyyy-MM-dd\" /></div>";
 
 			// act
 			var html = helper.DatepickerFor(p => p.Birthdate, false);

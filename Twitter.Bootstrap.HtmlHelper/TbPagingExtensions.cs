@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Twitter.Bootstrap.HtmlHelpers
 {
@@ -46,20 +47,20 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				const int segment = VisiblePages/2;
 				const int radius = 3;
 
-				var startOfPart2 = pageCount - segment;
+				var startOfPart2 = (pageCount - segment) + 1;
 				var endOfPart1 = segment;
-				
-				var segment1InRadius = Math.Abs(segment - currentPage) <= radius;
-				var segment2InRadius = Math.Abs(startOfPart2 - currentPage) <= radius;
+
+				var segment1InRadius = (currentPage >= 1 && currentPage <= segment + radius);
+				var segment2InRadius = (currentPage >= startOfPart2 - radius && currentPage <= pageCount);
 
 				// head
-				if (segment1InRadius)
+				if (segment1InRadius && currentPage > segment)
 				{
 					endOfPart1 += radius;
 					startOfPart2 += radius;
 				}
 
-				if (segment2InRadius)
+				if (segment2InRadius && currentPage < startOfPart2)
 				{
 					startOfPart2 -= radius;
 					endOfPart1 -= radius;
@@ -69,13 +70,14 @@ namespace Twitter.Bootstrap.HtmlHelpers
 	
 				// body -
 				if ((segment1InRadius || segment2InRadius) 
-					|| (pageCount - VisiblePages) <= segment)
+					//|| (pageCount - VisiblePages <= segment)
+				)
 				{
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 				}
 				else
 				{
-				    var middle = (int)pageCount/2;
+					var middle = currentPage;//pageCount/2;
 
 					ul.InnerHtml += @"<li class=""disabled""><span>...</span></li>";
 					WritePages(middle - 1, middle + 1, currentPage, ul, defaultUrl);
@@ -107,7 +109,6 @@ namespace Twitter.Bootstrap.HtmlHelpers
 				}
 
 				ul.InnerHtml += string.Format(@"<li><a href=""{0}"">{1}</a></li>", PageLink(defaultUrl, i), i);
-				;
 			}
 		}
 

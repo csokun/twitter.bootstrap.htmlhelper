@@ -123,7 +123,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			Assert.Contains(@"<li class=""active""><span>9</span></li>", html); // current
             Assert.Equal(html.IndexOf(@"<span>1</span>", System.StringComparison.CurrentCulture), 
                 html.LastIndexOf(@"<span>1</span>", System.StringComparison.CurrentCulture));
-			Assert.Contains(@"10</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=20", html); // right
+			Assert.Contains(@"10</a></li><li class=""disabled""><span>...</span></li><li><a href=""?PageIndex=21", html); // right
 		}
 
 		[Fact]
@@ -178,9 +178,9 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 				: @"<li class=""disabled""><span>&raquo;</span></li>", html); // Next
 		}
 
-		// 1 2 3 ... 16 [17] 18 ... 23 14 25
+		// [1] 2 3 4 5 ... 21 22 23 14 25
 		[Fact]
-		public void When_currentPage_within_three_page_range_from_tail_add_to_append_and_dot_middle()
+		public void When_currentPage_within_radius_range_from_head_or_tail_add_dot_middle()
 		{
 			// arrange
 			var helper = MvcHelper.GetHtmlHelper();
@@ -194,10 +194,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			AssertPrevNext(currentPage, pageCount, html);
 
 			// assert center split
-			//Assert.Contains(@"<li><a href=""?PageIndex=16"">16</a></li><li class=""active""><span>17</span></li><li><a href=""?PageIndex=18"">18</a></li>", html); // current
-			
 			var found = Regex.Matches(html, @"\.{3}").Count;
-			Assert.Equal(2, found);
+			Assert.Equal(1, found);
 		}
 
 		[Fact]
@@ -215,8 +213,8 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			AssertPrevNext(currentPage, pageCount, html);
 
 			//
-            Assert.Equal(html.IndexOf(@"<span>1</span>", StringComparison.CurrentCulture),
-                html.LastIndexOf(@"<span>1</span>", StringComparison.CurrentCulture));
+      Assert.Equal(html.IndexOf(@"<span>1</span>", StringComparison.CurrentCulture),
+          html.LastIndexOf(@"<span>1</span>", StringComparison.CurrentCulture));
 			
 		}
 	}
