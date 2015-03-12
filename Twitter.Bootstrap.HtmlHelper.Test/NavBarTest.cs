@@ -143,7 +143,6 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var navBar = new NavBar() {Fixed = NavBarDock.Top};
 
 			// act
-			// act
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
@@ -157,11 +156,23 @@ namespace Twitter.Bootstrap.HtmlHelpers.Test
 			var navBar = new NavBar() { Fixed = NavBarDock.Top, Inverse = true};
 
 			// act
-			// act
 			var html = helper.NavBar(navBar, null).ToHtmlString();
 
 			// assert
 			Assert.Contains("navbar-inverse navbar-fixed-top navbar", html);
+		}
+
+		[Fact]
+		public void NavBar_support_fluid_layout()
+		{
+			// arrange
+			var navBar = new NavBar {Fluid = true};
+
+			// act
+			var html = helper.NavBar(navBar, null).ToHtmlString();
+
+			// assert
+			Assert.Contains("container-fluid", html);
 		}
 
 		[Fact]

@@ -14,6 +14,7 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 		public NavBar()
 		{
 			Fixed = NavBarDock.None;
+			Fluid = false;
 		}
 
 		public string Brand { get; set; }
@@ -28,5 +29,10 @@ namespace Twitter.Bootstrap.HtmlHelpers.ViewModels
 		public NavBarDock Fixed { get; set; }
 
 		public IList<TbMenuTree> Items { get; set; }
+
+		/// <summary>
+		/// Support Fluid Layout
+		/// </summary>
+		public bool Fluid { get; set; }
 	}
 }
